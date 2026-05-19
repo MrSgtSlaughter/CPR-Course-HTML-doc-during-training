@@ -548,7 +548,7 @@
         <div id="rhythm-feedback" class="feedback"></div>
 
         <div class="button-group" style="margin-top: 30px;">
-            <button class="btn-success" onclick="nextSection()" id="continueFromRhythm" disabled>Continue to Next Section</button>
+            <button class="btn-success" onclick="nextSection()" id="continueFromRhythm" disabled>Continue to Scenario 1</button>
         </div>
     </div>
 
@@ -667,16 +667,53 @@
         </div>
     </div>
 
-    <!-- SECTION 6: Emergency Scenarios -->
-    <div id="scenarios-section" class="section">
-        <h2>Emergency Scenarios & Decision-Making</h2>
-        <p>Apply your knowledge to realistic emergency situations. Answer the questions about the correct response steps.</p>
-
-        <div id="scenarios-container"></div>
-
+    <!-- SECTION 6A: Scenario 1 (after Knowledge) -->
+    <div id="scenario1-section" class="section">
+        <h2>🏢 Scenario 1: Office Building Cardiac Emergency</h2>
+        <p>Let's apply what you just learned to a real emergency situation.</p>
+        <div id="scenario1-container"></div>
         <div class="button-group">
-            <button class="btn-success" onclick="checkScenarioAnswers()">Submit Scenario Answers</button>
-            <button class="btn-secondary" onclick="nextSection()">Continue to Final Assessment</button>
+            <button class="btn-success" onclick="checkIndividualScenario(0)">Submit Answer</button>
+        </div>
+    </div>
+
+    <!-- SECTION 6B: Scenario 2 (after Rhythm) -->
+    <div id="scenario2-section" class="section">
+        <h2>🍽️ Scenario 2: Restaurant Choking Incident</h2>
+        <p>Apply what you learned about CPR rhythm and timing.</p>
+        <div id="scenario2-container"></div>
+        <div class="button-group">
+            <button class="btn-success" onclick="checkIndividualScenario(1)">Submit Answer</button>
+        </div>
+    </div>
+
+    <!-- SECTION 6C: Scenario 3 (after AED) -->
+    <div id="scenario3-section" class="section">
+        <h2>🏊 Scenario 3: Pool Drowning Emergency</h2>
+        <p>Apply your AED knowledge to a new emergency.</p>
+        <div id="scenario3-container"></div>
+        <div class="button-group">
+            <button class="btn-success" onclick="checkIndividualScenario(2)">Submit Answer</button>
+        </div>
+    </div>
+
+    <!-- SECTION 6D: Scenario 4 (after Shock) -->
+    <div id="scenario4-section" class="section">
+        <h2>🐝 Scenario 4: Severe Allergic Reaction at School</h2>
+        <p>Apply your shock recognition and advanced response skills.</p>
+        <div id="scenario4-container"></div>
+        <div class="button-group">
+            <button class="btn-success" onclick="checkIndividualScenario(3)">Submit Answer</button>
+        </div>
+    </div>
+
+    <!-- SECTION 6E: Scenario 5 (before Final Assessment) -->
+    <div id="scenario5-section" class="section">
+        <h2>😵 Scenario 5: Fainting at the Gym</h2>
+        <p>Final scenario: Apply all your knowledge to a challenging situation.</p>
+        <div id="scenario5-container"></div>
+        <div class="button-group">
+            <button class="btn-success" onclick="checkIndividualScenario(4)">Submit Answer</button>
         </div>
     </div>
 
@@ -1005,7 +1042,7 @@ const gameState = {
     studentOrg: '',
     score: 0,
     totalPoints: 0,
-    sectionCompleted: [false, false, false, false, false, false, false],
+    sectionCompleted: [false, false, false, false, false, false, false, false, false, false, false, false],
     currentSection: 0,
     mcAnswers: {},
     fibAnswers: {},
@@ -1185,8 +1222,9 @@ function checkAllAnswers() {
     if (allCorrect && matchCorrect) {
         gameState.score += (correctCount / totalCount) * 25;
         gameState.sectionCompleted[1] = true;
-        alert(`Knowledge Assessment Complete! Score: ${Math.round(correctCount)}/${Math.round(totalCount)}`);
         updateProgress();
+        alert(`Knowledge Assessment Complete! Score: ${Math.round(correctCount)}/${Math.round(totalCount)}\n\nGreat! Now let's apply your knowledge to real scenarios.`);
+        nextSection();
     }
 
     saveToLocalStorage();
@@ -1346,7 +1384,7 @@ document.getElementById('startRhythmBtn')?.addEventListener('click', function() 
             feedbackDiv.classList.add('show', 'correct');
             gameState.rhythmPassed = true;
             gameState.score += 20;
-            gameState.sectionCompleted[2] = true;
+            gameState.sectionCompleted[3] = true;
             updateProgress();
             document.getElementById('continueFromRhythm').disabled = false;
             scene.physics.pause();
@@ -1413,8 +1451,9 @@ function checkAEDAnswers() {
 
     if (aedCorrect === 3) {
         gameState.score += 15;
-        gameState.sectionCompleted[3] = true;
+        gameState.sectionCompleted[6] = true;
         updateProgress();
+        alert('AED Module Complete! Excellent understanding of defibrillator use.');
     }
 
     saveToLocalStorage();
@@ -1453,8 +1492,9 @@ function checkShockAnswers() {
 
     if (shockCorrect === 2) {
         gameState.score += 10;
-        gameState.sectionCompleted[4] = true;
+        gameState.sectionCompleted[8] = true;
         updateProgress();
+        alert('Shock Recognition Complete! You understand critical emergency response.');
     }
 
     saveToLocalStorage();
@@ -1465,42 +1505,49 @@ function checkShockAnswers() {
 // ============================================
 
 function renderScenarios() {
-    let scenariosHTML = '';
+    // Render each scenario in its own section
     quizData.scenarios.forEach((scenario, sIdx) => {
-        scenariosHTML += `
-        <div style="margin-bottom: 40px; page-break-inside: avoid;">
-            <h3 style="color: var(--primary); font-size: 1.3em; margin-top: 30px; margin-bottom: 15px;">${scenario.title}</h3>
-            <div class="scenario-story" style="font-size: 1em; line-height: 1.8;">
-                ${scenario.story}
-            </div>
-            
-            <div style="margin: 25px 0;">`;
+        renderIndividualScenarioInContainer(scenario, sIdx);
+    });
+}
+
+function renderIndividualScenarioInContainer(scenario, sIdx) {
+    let scenarioHTML = `
+    <div style="margin-bottom: 20px;">
+        <div class="scenario-story" style="font-size: 1em; line-height: 1.8; margin-bottom: 25px;">
+            ${scenario.story}
+        </div>
         
-        scenario.questions.forEach((q, qIdx) => {
-            const questionId = `scenario${sIdx}_q${qIdx}`;
-            scenariosHTML += `
-            <div class="question-block" style="margin-bottom: 20px;">
-                <p><strong>Question ${qIdx + 1}:</strong> ${q.q}</p>
-                <div style="margin: 15px 0;">`;
-            
-            q.options.forEach((option, optIdx) => {
-                scenariosHTML += `
-                    <label style="display: block; margin-bottom: 10px; padding: 10px; border-radius: 4px; cursor: pointer; border: 2px solid #ddd; transition: all 0.3s;">
-                        <input type="radio" name="${questionId}" value="${optIdx}" onchange="recordScenarioAnswer('${questionId}', ${optIdx}, '${q.explanation.replace(/'/g, "\\'")}')"> 
-                        ${option}
-                    </label>`;
-            });
-            
-            scenariosHTML += `
-                </div>
-                <div id="${questionId}_feedback" class="feedback" style="margin-top: 10px;"></div>
-            </div>`;
+        <div style="margin: 25px 0;">`;
+    
+    scenario.questions.forEach((q, qIdx) => {
+        const questionId = `scenario${sIdx}_q${qIdx}`;
+        scenarioHTML += `
+        <div class="question-block" style="margin-bottom: 20px;">
+            <p><strong>Question ${qIdx + 1}:</strong> ${q.q}</p>
+            <div style="margin: 15px 0;">`;
+        
+        q.options.forEach((option, optIdx) => {
+            scenarioHTML += `
+                <label style="display: block; margin-bottom: 10px; padding: 10px; border-radius: 4px; cursor: pointer; border: 2px solid #ddd; transition: all 0.3s;">
+                    <input type="radio" name="${questionId}" value="${optIdx}" onchange="recordScenarioAnswer('${questionId}', ${optIdx}, '${q.explanation.replace(/'/g, "\\'")}')"> 
+                    ${option}
+                </label>`;
         });
         
-        scenariosHTML += `</div></div>`;
+        scenarioHTML += `
+            </div>
+            <div id="${questionId}_feedback" class="feedback" style="margin-top: 10px;"></div>
+        </div>`;
     });
     
-    document.getElementById('scenarios-container').innerHTML = scenariosHTML;
+    scenarioHTML += `</div>`;
+    
+    const containerId = `scenario${sIdx}-container`;
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = scenarioHTML;
+    }
 }
 
 function recordScenarioAnswer(questionId, selectedIndex, explanation) {
@@ -1533,34 +1580,31 @@ function recordScenarioAnswer(questionId, selectedIndex, explanation) {
     saveToLocalStorage();
 }
 
-function checkScenarioAnswers() {
+function checkIndividualScenario(scenarioIndex) {
+    const scenario = quizData.scenarios[scenarioIndex];
     let correctCount = 0;
-    let totalQuestions = 0;
+    let totalQuestions = scenario.questions.length;
     
-    // Count all scenario questions
-    quizData.scenarios.forEach((scenario, sIdx) => {
-        scenario.questions.forEach((q, qIdx) => {
-            totalQuestions++;
-            const questionId = `scenario${sIdx}_q${qIdx}`;
-            
-            // Check if answer was selected
-            if (gameState.scenarioAnswers[questionId] !== undefined) {
-                if (gameState.scenarioAnswers[questionId] === q.correct) {
-                    correctCount++;
-                }
+    scenario.questions.forEach((q, qIdx) => {
+        const questionId = `scenario${scenarioIndex}_q${qIdx}`;
+        
+        // Check if answer was selected
+        if (gameState.scenarioAnswers[questionId] !== undefined) {
+            if (gameState.scenarioAnswers[questionId] === q.correct) {
+                correctCount++;
             }
-        });
+        }
     });
     
     const percentage = Math.round((correctCount / totalQuestions) * 100);
     
-    if (percentage >= 70) {
-        gameState.score += 25;
-        gameState.sectionCompleted[5] = true;
+    if (percentage >= 67) {
+        gameState.score += 5;  // 5 points per scenario (25 total for all 5)
         updateProgress();
-        alert(`Scenario Assessment Complete!\n\nYou answered ${correctCount}/${totalQuestions} questions correctly (${percentage}%)\n\nGreat medical decision-making!`);
+        alert(`Scenario ${scenarioIndex + 1} Complete!\n\nYou answered ${correctCount}/${totalQuestions} questions correctly (${percentage}%)\n\nGreat work!`);
+        nextSection();
     } else {
-        alert(`Scenario Assessment: ${correctCount}/${totalQuestions} correct (${percentage}%)\n\nYou need 70% to pass. Review your incorrect answers and try again.`);
+        alert(`Scenario ${scenarioIndex + 1}: ${correctCount}/${totalQuestions} correct (${percentage}%)\n\nPlease review your answers and try again.`);
     }
 
     saveToLocalStorage();
@@ -1594,8 +1638,14 @@ function generateCertificate() {
         completionTime: Math.round((Date.now() - gameState.courseStartTime) / 1000)
     };
 
-    gameState.sectionCompleted[7] = true;
+    // Mark all sections complete
+    for (let i = 0; i < gameState.sectionCompleted.length; i++) {
+        gameState.sectionCompleted[i] = true;
+    }
+
+    gameState.sectionCompleted[11] = true;
     saveToLocalStorage();
+    updateProgress();
 
     showSection('certificate-section');
 }
@@ -1680,10 +1730,14 @@ function showSectionByIndex(index) {
     const sectionIds = [
         'intro-section',
         'knowledge-section',
+        'scenario1-section',      // After Knowledge
         'rhythm-section',
+        'scenario2-section',      // After Rhythm
         'aed-section',
+        'scenario3-section',      // After AED
         'shock-section',
-        'scenarios-section',
+        'scenario4-section',      // After Shock
+        'scenario5-section',      // Before Final
         'final-section',
         'certificate-section'
     ];
