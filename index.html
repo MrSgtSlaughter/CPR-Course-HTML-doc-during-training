@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPR & First Aid Certification - 80 Minute Course</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        :root {
+            --primary: #e53935;
+            --secondary: #1e88e5;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #43a047;
+            --warning: #fdd835;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #c62828 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--success);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .timer-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .scenario-story {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid var(--warning);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.8;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .scenario-story strong {
+            color: var(--primary);
+        }
+
+        input[type="text"], input[type="email"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 136, 229, 0.3);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #c62828;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #1565c0;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #2e7d32;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        label:hover {
+            background: rgba(30, 136, 229, 0.1);
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        #game-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #111;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .feedback {
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .aed-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .aed-step-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .aed-step-card:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 4px 8px rgba(30, 136, 229, 0.2);
+        }
+
+        .aed-step-card.completed {
+            background: #e8f5e9;
+            border-color: var(--success);
+        }
+
+        .aed-step-card h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .shock-rhythm {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .shock-indicator {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shock-indicator:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary);
+        }
+
+        .shock-indicator.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .certificate-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            border: 3px solid var(--primary);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .certificate-container h2 {
+            color: var(--primary);
+            font-size: 2em;
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 20px;
+        }
+
+        .certificate-content {
+            font-size: 1.1em;
+            line-height: 2;
+            margin: 30px 0;
+        }
+
+        .certificate-student-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: underline;
+            margin: 20px 0;
+        }
+
+        .certificate-score {
+            font-size: 1.3em;
+            color: var(--secondary);
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons button {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, var(--success) 0%, #2e7d32 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .instruction-list {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .instruction-list ol {
+            margin-left: 20px;
+        }
+
+        .instruction-list li {
+            margin: 10px 0;
+        }
+
+        /* Scenario styling */
+        .scenario-question-option {
+            display: block;
+            margin-bottom: 12px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .scenario-question-option:hover {
+            border-color: var(--secondary);
+            background: #f5f5f5;
+            transform: translateX(5px);
+        }
+
+        .scenario-question-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        html.dark-mode .scenario-question-option {
+            background: rgba(255,255,255,0.05);
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .timer-display { font-size: 1em; padding: 10px 15px; }
+            .button-group { flex-direction: column; }
+            button { width: 100%; }
+            .aed-steps-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="timer-display">
+    ⏱️ <span id="timer">80:00</span>
+</div>
+
+<div class="container">
+    <header>
+        <h1>🚑 CPR & FIRST AID CERTIFICATION</h1>
+        <p>Comprehensive 80-Minute Interactive Training Course</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: Introduction & Student Info -->
+    <div id="intro-section" class="section active">
+        <h2>Welcome to CPR Certification Training</h2>
+        <p style="font-size: 1.1em;">This comprehensive course will prepare you for CPR, AED, and First Aid certification. You'll learn through interactive scenarios, rhythm training, and practical assessments.</p>
+        
+        <div class="info-box">
+            <strong>📋 Course Overview:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Knowledge Assessment (Multiple Choice, Fill-in-Blank, Matching)</li>
+                <li>CPR Rhythm Training Game (30 seconds, 3-miss rule)</li>
+                <li>AED (Automated External Defibrillator) Module</li>
+                <li>Shock Recognition & Response</li>
+                <li>5 Emergency Scenarios with Decision-Making</li>
+                <li>Final Assessment</li>
+                <li>Certificate of Completion</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Important:</strong> This course is for educational purposes. Always call 911 in a real emergency. Practice on manikins or simulation devices when available.
+        </div>
+
+        <h3 style="margin-top: 30px;">Student Information</h3>
+        <label>Full Name:
+            <input type="text" id="studentName" placeholder="Enter your full name">
+        </label>
+        <label>Email:
+            <input type="email" id="studentEmail" placeholder="your.email@school.edu">
+        </label>
+        <label>School/Organization:
+            <input type="text" id="studentOrg" placeholder="Your School Name">
+        </label>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="saveStudentInfo(); startCourse()">Start Course</button>
+        </div>
+    </div>
+
+    <!-- SECTION 2: Knowledge Assessment -->
+    <div id="knowledge-section" class="section">
+        <h2>Knowledge Assessment</h2>
+        <p>Test your foundational knowledge of CPR and First Aid.</p>
+
+        <!-- Multiple Choice -->
+        <h3>Multiple Choice Questions</h3>
+        <div id="mc-container"></div>
+
+        <!-- Fill in the Blank -->
+        <h3 style="margin-top: 30px;">Fill in the Blank</h3>
+        <div id="fib-container"></div>
+
+        <!-- Matching -->
+        <h3 style="margin-top: 30px;">Matching Questions</h3>
+        <div id="matching-container"></div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="checkAllAnswers()">Submit Knowledge Assessment</button>
+        </div>
+    </div>
+
+    <!-- SECTION 3: Rhythm Game (30 seconds, 3-miss rule) -->
+    <div id="rhythm-section" class="section">
+        <h2>CPR Rhythm Trainer - 30 Second Challenge</h2>
+        <p>Perform chest compressions at 100-120 BPM (beats per minute). Hit the SPACEBAR when the beat reaches the target zone. You have 3 misses before you must restart.</p>
+
+        <div class="warning-box">
+            <strong>Rules:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Hit SPACE when the beat reaches the green zone</li>
+                <li>You can miss a maximum of 3 times</li>
+                <li>If you miss more than 3 times, the game restarts</li>
+                <li>You have 30 seconds to accumulate 30+ points</li>
+            </ul>
+        </div>
+
+        <button id="startRhythmBtn" class="btn-success">Start Rhythm Game</button>
+        <div id="game-container"></div>
+        <div id="rhythm-feedback" class="feedback"></div>
+
+        <div class="button-group" style="margin-top: 30px;">
+            <button class="btn-success" onclick="nextSection()" id="continueFromRhythm" disabled>Continue to Next Section</button>
+        </div>
+    </div>
+
+    <!-- SECTION 4: AED Module -->
+    <div id="aed-section" class="section">
+        <h2>AED (Automated External Defibrillator) Module</h2>
+        <p>Learn the step-by-step process of using an AED in an emergency.</p>
+
+        <div class="scenario-story">
+            <strong>Scenario:</strong> An adult collapses in the shopping mall. They are unresponsive and not breathing normally. A nearby store employee retrieves an AED from the wall. You are trained in CPR and arrive first.
+        </div>
+
+        <h3>Step-by-Step AED Deployment</h3>
+        <div class="instruction-list">
+            <ol>
+                <li><strong>Turn ON the AED</strong> - Look for the ON/OFF button or lid</li>
+                <li><strong>Expose the Patient's Chest</strong> - Remove clothing; remove jewelry and medication patches</li>
+                <li><strong>Dry the Chest</strong> - If wet, dry with a towel</li>
+                <li><strong>Place Adhesive Pads</strong> - First pad: upper right chest (below collarbone). Second pad: left side mid-axillary line at 5th-6th rib</li>
+                <li><strong>Connect Cables</strong> - Plug pads into AED if not pre-connected</li>
+                <li><strong>Follow Voice Prompts</strong> - The AED will analyze the heart rhythm</li>
+                <li><strong>Deliver Shock if Advised</strong> - Keep clear of patient, press SHOCK button when prompted</li>
+                <li><strong>Resume CPR</strong> - After shock, immediately resume chest compressions</li>
+            </ol>
+        </div>
+
+        <h3>Practice: AED Pad Placement</h3>
+        <p>Click the correct locations to place AED pads on the patient's body:</p>
+        <div class="aed-steps-grid">
+            <div class="aed-step-card" onclick="selectAEDPad(1)">
+                <h3>📍 Pad 1</h3>
+                <p>Upper Right Chest (below collarbone)</p>
+                <span id="aed1-check" style="display:none;">✓</span>
+            </div>
+            <div class="aed-step-card" onclick="selectAEDPad(2)">
+                <h3>📍 Pad 2</h3>
+                <p>Left Side (mid-axillary line, 5th-6th rib)</p>
+                <span id="aed2-check" style="display:none;">✓</span>
+            </div>
+        </div>
+
+        <h3>AED Quiz</h3>
+        <div class="question-block">
+            <p><strong>1. What should you do BEFORE turning on the AED?</strong></p>
+            <label><input type="radio" name="aed_q1"> Remove all patient clothing</label>
+            <label><input type="radio" name="aed_q1"> Check responsiveness and call 911</label>
+            <label><input type="radio" name="aed_q1"> Start CPR immediately</label>
+            <div id="aed_q1_feedback" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+            <p><strong>2. The AED advises "No shock advised." What should you do?</strong></p>
+            <label><input type="radio" name="aed_q2"> Resume CPR immediately</label>
+            <label><input type="radio" name="aed_q2"> Stop and wait for paramedics</label>
+            <label><input type="radio" name="aed_q2"> Turn off the AED</label>
+            <div id="aed_q2_feedback" class="feedback"></div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="checkAEDAnswers()">Check AED Answers</button>
+            <button class="btn-secondary" onclick="nextSection()">Continue to Shock Recognition</button>
+        </div>
+    </div>
+
+    <!-- SECTION 5: Shock Recognition -->
+    <div id="shock-section" class="section">
+        <h2>Recognizing & Responding to Shock</h2>
+        <p>Shock is a life-threatening condition where the body is not receiving enough oxygenated blood. Learn to recognize and treat it.</p>
+
+        <h3>Signs & Symptoms of Shock</h3>
+        <div class="info-box">
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Pale, cold, clammy skin</li>
+                <li>Rapid, weak pulse</li>
+                <li>Rapid, shallow breathing</li>
+                <li>Weakness or confusion</li>
+                <li>Nausea or vomiting</li>
+                <li>Dilated pupils</li>
+                <li>Loss of consciousness</li>
+            </ul>
+        </div>
+
+        <h3>Treatment for Shock</h3>
+        <div class="instruction-list">
+            <ol>
+                <li>Call 911 immediately</li>
+                <li>Lay the patient flat (unless spinal injury is suspected)</li>
+                <li>Elevate legs 12 inches (if no spinal injury)</li>
+                <li>Keep patient warm with blankets</li>
+                <li>Do NOT give food or water</li>
+                <li>Reassure and monitor consciousness</li>
+                <li>Be ready to perform CPR</li>
+            </ol>
+        </div>
+
+        <h3>Shock Recognition Quiz</h3>
+        <div class="question-block">
+            <p><strong>1. A patient is breathing rapidly and has cold, clammy skin. These are signs of:</strong></p>
+            <label><input type="radio" name="shock_q1"> Hypothermia</label>
+            <label><input type="radio" name="shock_q1"> Shock</label>
+            <label><input type="radio" name="shock_q1"> Dehydration</label>
+            <div id="shock_q1_feedback" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+            <p><strong>2. If a patient is in shock and conscious, what should you do FIRST?</strong></p>
+            <label><input type="radio" name="shock_q2"> Give them water to drink</label>
+            <label><input type="radio" name="shock_q2"> Call 911 and keep them warm</label>
+            <label><input type="radio" name="shock_q2"> Have them sit up to breathe better</label>
+            <div id="shock_q2_feedback" class="feedback"></div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="checkShockAnswers()">Check Shock Answers</button>
+            <button class="btn-secondary" onclick="nextSection()">Continue to Scenarios</button>
+        </div>
+    </div>
+
+    <!-- SECTION 6: Emergency Scenarios -->
+    <div id="scenarios-section" class="section">
+        <h2>Emergency Scenarios & Decision-Making</h2>
+        <p>Apply your knowledge to realistic emergency situations. Answer the questions about the correct response steps.</p>
+
+        <div id="scenarios-container"></div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="checkScenarioAnswers()">Submit Scenario Answers</button>
+            <button class="btn-secondary" onclick="nextSection()">Continue to Final Assessment</button>
+        </div>
+    </div>
+
+    <!-- SECTION 7: Final Assessment -->
+    <div id="final-section" class="section">
+        <h2>Final Assessment & Review</h2>
+        <p>Review your performance and answers before generating your certificate.</p>
+
+        <div id="final-summary"></div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="generateCertificate()">Generate Certificate</button>
+            <button class="btn-secondary" onclick="reviewSection('knowledge')">Review Knowledge</button>
+        </div>
+    </div>
+
+    <!-- SECTION 8: Certificate -->
+    <div id="certificate-section" class="section">
+        <div class="certificate-container">
+            <h2>🎓 CERTIFICATE OF COMPLETION</h2>
+            <div class="certificate-content">
+                <p style="font-size: 0.9em;">This certifies that</p>
+                <div class="certificate-student-name" id="certStudentName">Student Name</div>
+                <p>has successfully completed the</p>
+                <p><strong>CPR & First Aid Certification Training Course</strong></p>
+                <p style="font-size: 0.9em;">A comprehensive 80-minute interactive training program covering:</p>
+                <p style="font-size: 0.9em;">CPR Techniques • AED Usage • Shock Recognition • Emergency Response</p>
+                <div class="certificate-score" id="certScore">Score: 0%</div>
+                <p style="font-size: 0.9em; margin-top: 30px;">Date: <span id="certDate"></span></p>
+                <p style="font-size: 0.75em; margin-top: 20px; opacity: 0.7;">Certificate ID: <span id="certID"></span></p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>📌 Next Steps:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Your certificate is ready for download</li>
+                <li>A copy has been saved locally on your device</li>
+                <li>Optional: Save to Google Drive (see instructions below)</li>
+                <li>Share your certificate with your instructor or employer</li>
+            </ul>
+        </div>
+
+        <h3>Save Your Certificate to Google Drive</h3>
+        <div class="instruction-list">
+            <p><strong>Step 1:</strong> Click "Save to Google Drive" below</p>
+            <p><strong>Step 2:</strong> Sign in with your Google account when prompted</p>
+            <p><strong>Step 3:</strong> Your certificate will be saved as a PDF in your Drive</p>
+            <p><strong>Note:</strong> This requires Google Drive API permission for the first time only</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-success" onclick="downloadCertificate()">📥 Download as PDF</button>
+            <button class="btn-secondary" onclick="saveToDrive()">☁️ Save to Google Drive</button>
+            <button class="btn-secondary" onclick="printCertificate()">🖨️ Print Certificate</button>
+            <button class="btn-secondary" onclick="location.reload()">🔄 Start Over</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// QUIZ DATA & GAME STATE
+// ============================================
+
+const quizData = {
+    multipleChoice: [
+        { question: "According to the Good Samaritan Law, what should you do BEFORE giving care to a conscious victim?", options: ["Ask for consent", "Call their doctor", "Perform a head-to-toe check immediately", "Move them to a comfortable chair"], answer: 0 },
+        { question: "The modern CPR sequence is represented by the acronym CAB. What does CAB stand for?", options: ["Circulation, Airway, Breathing", "Check, Action, Breathe", "Compressions, Airway, Breathing", "Call, Assess, Bandage"], answer: 2 },
+        { question: "For an adult, chest compressions should be at least how many inches deep?", options: ["1 inch", "1.5 inches", "2 inches", "3 inches"], answer: 2 },
+        { question: "What is the recommended compression rate for CPR?", options: ["60-80 bpm", "80-100 bpm", "100-120 bpm", "120-140 bpm"], answer: 2 },
+        { question: "If you are alone and encounter an unresponsive adult, what should you do first?", options: ["Start CPR immediately", "Call 911 and get an AED", "Check for breathing", "Perform rescue breaths"], answer: 1 },
+        { question: "When should you use an AED?", options: ["Only for children", "For any unresponsive person not breathing normally", "Only if CPR doesn't work", "Never use it without medical training"], answer: 1 },
+    ],
+    fillInBlank: [
+        { text: "The three basic emergency action steps are [BLANK], Call, and Care.", answer: "Check" },
+        { text: "For an adult, push hard on the chest at least [BLANK] inches deep.", answer: "2" },
+        { text: "CPR compressions should be performed at [BLANK] beats per minute.", answer: "100-120" },
+        { text: "An AED should be applied to an unresponsive person [BLANK] with abnormal breathing.", answer: "immediately" },
+        { text: "If a patient shows signs of shock, lay them flat and elevate their legs [BLANK] inches.", answer: "12" },
+        { text: "After a shock is delivered by an AED, you should [BLANK] CPR immediately.", answer: "resume" },
+        { text: "When performing rescue breaths, give [BLANK] breath(s) after every 30 chest compressions.", answer: "2" },
+        { text: "A person experiencing anaphylaxis should receive an injection from an [BLANK] as soon as possible.", answer: "EpiPen" },
+        { text: "If a person is choking and cannot speak or cough, perform [BLANK]] maneuver or back blows.", answer: "Heimlich" },
+        { text: "You should continue CPR until either the patient shows signs of life, EMS arrives, or you are [BLANK]].", answer: "exhausted" },
+    ],
+    matching: {
+        question: "Match the term to its definition:",
+        pairs: [
+            { term: "AED", definition: "A device that can analyze heart rhythm and deliver a shock." },
+            { term: "Agonal Breaths", definition: "Isolated, gasping breaths that are not normal breathing." },
+            { term: "Anaphylaxis", definition: "A severe, life-threatening allergic reaction." },
+            { term: "Shock", definition: "A condition where the body doesn't receive enough oxygenated blood." },
+            { term: "Cardiac Arrest", definition: "When the heart stops beating effectively." }
+        ]
+    },
+    scenarios: [
+        {
+            title: "🏢 SCENARIO 1: Office Building Cardiac Emergency",
+            story: `You work on the 3rd floor of an office building. It's 2:30 PM on a Tuesday afternoon. Sarah, a 52-year-old accountant in the cubicle next to you, suddenly stands up, clutches her chest, and collapses to the ground. She's unconscious and you can see her chest is barely moving. Her face is pale and her lips have a slight blue tint.
+
+Another coworker, Mike, is sitting at a desk nearby and is frozen in shock. There's an AED mounted on the wall about 50 feet away. You have your phone in your pocket.`,
+            questions: [
+                {
+                    q: "What are your FIRST two actions right now?",
+                    type: "mc",
+                    options: [
+                        "A) Call 911, then get the AED",
+                        "B) Get the AED first, then call 911",
+                        "C) Move Sarah to a more comfortable location",
+                        "D) Wait for a manager to arrive and tell you what to do"
+                    ],
+                    correct: 0,
+                    explanation: "Correct: Call 911 immediately for professional help, then get the AED. Time is critical in cardiac arrest."
+                },
+                {
+                    q: "While waiting for the AED, what should you do?",
+                    type: "mc",
+                    options: [
+                        "A) Give her water to drink to help her recover",
+                        "B) Move her to lay flat and start CPR compressions",
+                        "C) Loosen her clothing and wait for more help",
+                        "D) Position her on her side to help her breathe"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Lay her flat and begin CPR immediately. Compressions are critical before the AED arrives."
+                },
+                {
+                    q: "The AED arrives and your coworker turns it on. What does it tell you to do?",
+                    type: "mc",
+                    options: [
+                        "A) 'Shock advised' - you press the shock button immediately",
+                        "B) 'No shock advised' - you should still continue CPR",
+                        "C) Both A and B are possible depending on the heart rhythm",
+                        "D) The AED will shock her automatically without you doing anything"
+                    ],
+                    correct: 2,
+                    explanation: "Correct: Both responses are possible. The AED analyzes the heart rhythm and may advise a shock OR advise continued CPR if no shock is needed."
+                }
+            ]
+        },
+        {
+            title: "🍽️ SCENARIO 2: Restaurant Choking Incident",
+            story: `You're having dinner at a busy restaurant with your family. At the next table, a 6-year-old boy is eating chicken nuggets. Suddenly, he starts making strange choking sounds and his hands fly to his throat. He cannot speak, cannot cough effectively, and his face is turning red. His mother is panicking and looking around desperately for help.
+
+You know CPR and First Aid. The restaurant staff is busy in the kitchen. You're the closest trained person to the child.`,
+            questions: [
+                {
+                    q: "What is your IMMEDIATE first action?",
+                    type: "mc",
+                    options: [
+                        "A) Tell the mother to stay calm and wait to see if he coughs it up",
+                        "B) Get behind the child and perform back blows and abdominal thrusts (Heimlich)",
+                        "C) Call 911 first before doing anything",
+                        "D) Have him drink water to help wash it down"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: A choking person with no effective cough needs back blows and abdominal thrusts IMMEDIATELY. This is a true airway emergency."
+                },
+                {
+                    q: "After 5 back blows, the object is still lodged. What's next?",
+                    type: "mc",
+                    options: [
+                        "A) Stop and wait for EMS",
+                        "B) Continue with 5 abdominal thrusts (Heimlich maneuver)",
+                        "C) Try to pull the object out with your fingers",
+                        "D) Have him lean over and slap his back harder"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Alternate back blows with abdominal thrusts. 5 of each, repeat the cycle until the object comes out or he becomes unresponsive."
+                },
+                {
+                    q: "The object comes out and the child can breathe and cough again. What should you do?",
+                    type: "mc",
+                    options: [
+                        "A) Leave him alone, the emergency is over",
+                        "B) Call EMS so he can be evaluated for any throat injury",
+                        "C) Give him water to drink immediately",
+                        "D) Have him go back to eating to make sure he's okay"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Even though the object is out, the child should be evaluated by paramedics for possible throat injuries or aspiration."
+                }
+            ]
+        },
+        {
+            title: "🏊 SCENARIO 3: Community Pool Drowning",
+            story: `You're working as a summer camp counselor at a community pool. It's a hot Saturday afternoon with about 30 kids in the pool. You're scanning the water when you notice 9-year-old Marcus hasn't surfaced in about 45 seconds. He's at the bottom of the 6-foot deep end, motionless.
+
+You blow your whistle, and a fellow lifeguard immediately clears the pool. You grab the rescue tube and reach Marcus in 10 seconds. You pull him out of the water - he's not responding and is not breathing normally. Water is trickling from his mouth.`,
+            questions: [
+                {
+                    q: "What is your FIRST action after pulling Marcus onto the deck?",
+                    type: "mc",
+                    options: [
+                        "A) Immediately perform the Heimlich maneuver to expel water from his lungs",
+                        "B) Check responsiveness and begin CPR if not breathing",
+                        "C) Turn him on his side and let water drain out",
+                        "D) Wait 5 minutes to see if he wakes up on his own"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Check responsiveness and start CPR immediately. Don't delay for water drainage - his brain needs oxygen NOW."
+                },
+                {
+                    q: "You're doing CPR on Marcus. Is giving rescue breaths important for a drowning victim?",
+                    type: "mc",
+                    options: [
+                        "A) No, just do compressions only",
+                        "B) Yes, rescue breaths are especially critical for drowning victims",
+                        "C) Only if he has water in his mouth",
+                        "D) Wait until an ambulance arrives to give rescue breaths"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Rescue breaths are CRITICAL for drowning victims. They need oxygen delivery to the lungs. Use 30 compressions : 2 breaths ratio."
+                },
+                {
+                    q: "Your coworker calls 911. They arrive after 8 minutes and take over CPR. Marcus has a pulse! What complications should you watch for?",
+                    type: "mc",
+                    options: [
+                        "A) He's fine now, no complications expected",
+                        "B) Aspiration pneumonia, breathing problems, and organ damage from lack of oxygen",
+                        "C) Just dehydration from being in the pool",
+                        "D) He might be angry that he was rescued"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Secondary drowning and aspiration pneumonia are serious risks hours or even days after rescue. He needs hospital observation and monitoring."
+                }
+            ]
+        },
+        {
+            title: "🐝 SCENARIO 4: Severe Allergic Reaction at School Event",
+            story: `You're helping supervise the school picnic in the cafeteria. Students are eating snacks at tables. Suddenly, 14-year-old Priya stands up at her table and says, "Something's wrong with my throat." 
+
+Within 30 seconds, you notice: her face is swelling, especially around her lips and eyes. She's making wheezing sounds when she tries to breathe. She's got a few hives on her arms. She looks scared and is gasping. You remember she mentioned a peanut allergy on her medical form. There's a bowl of mixed nuts on her table.
+
+Priya has an EpiPen that should be in the school office.`,
+            questions: [
+                {
+                    q: "What is happening to Priya and what should you do IMMEDIATELY?",
+                    type: "mc",
+                    options: [
+                        "A) She's having a panic attack; tell her to calm down",
+                        "B) She's having anaphylaxis and needs an EpiPen RIGHT NOW - send someone to get it",
+                        "C) She ate something she shouldn't have; have her drink water",
+                        "D) Wait to see if her symptoms get worse before taking action"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: This is anaphylaxis - a life-threatening allergic reaction. Get the EpiPen IMMEDIATELY. Don't wait for symptoms to worsen."
+                },
+                {
+                    q: "The EpiPen has arrived. How do you use it?",
+                    type: "mc",
+                    options: [
+                        "A) Inject it into her arm muscle",
+                        "B) Spray it into her mouth to help her breathe",
+                        "C) Inject it into her thigh (outer muscle) through her pants if needed",
+                        "D) Have her hold it near her skin but don't puncture"
+                    ],
+                    correct: 2,
+                    explanation: "Correct: Inject into the outer thigh muscle. It can go through clothing if necessary - don't waste time removing pants."
+                },
+                {
+                    q: "After the EpiPen injection, what should be your next steps?",
+                    type: "mc",
+                    options: [
+                        "A) Leave her alone to recover; the EpiPen fixed the problem",
+                        "B) Call 911 AND have her lie down with legs elevated; get another EpiPen ready",
+                        "C) Have her sit up to help her breathe better",
+                        "D) Give her antihistamines and send her back to class"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Call 911 immediately, lay her flat with legs elevated (shock position), have a second EpiPen ready (reactions can happen again in 5-15 min)."
+                }
+            ]
+        },
+        {
+            title: "😵 SCENARIO 5: Fainting at the Gym",
+            story: `You're working out at a local gym around 5 PM. The gym is moderately busy with various people on equipment. A 45-year-old man named David is on the treadmill next to you. He's been running for about 10 minutes at a steady pace.
+
+Suddenly, David stumbles and collapses to the floor. His body goes limp. You immediately stop what you're doing. When you reach him within 5 seconds, you notice: he's breathing (you can see his chest rising and falling), his eyes are closed, and he's not responding when you tap his shoulder and shout his name. His skin is pale and cold. A gym staff member is nearby and can help.`,
+            questions: [
+                {
+                    q: "What is your FIRST action right now?",
+                    type: "mc",
+                    options: [
+                        "A) Leave him alone - he'll wake up on his own",
+                        "B) Check responsiveness and call 911, then check airway",
+                        "C) Move him to the side and wait to see what happens",
+                        "D) Get an AED immediately before doing anything"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Always check responsiveness first, call 911 immediately, then check if he's breathing normally. This is the CAB sequence - Circulation/responsiveness first, then Airway, then Breathing."
+                },
+                {
+                    q: "David is breathing but still unconscious. What position should you place him in?",
+                    type: "mc",
+                    options: [
+                        "A) Leave him on his back flat",
+                        "B) Place him in recovery position (on his side) to protect airway",
+                        "C) Sit him up against the wall",
+                        "D) Move him to the gym office immediately"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: The recovery position (on his side) keeps his airway open and allows fluids to drain if he vomits. This is critical for unconscious but breathing patients."
+                },
+                {
+                    q: "While waiting for EMS, you notice David is pale, cold, and his breathing is shallow. What condition might he be in?",
+                    type: "mc",
+                    options: [
+                        "A) He's just tired from exercise",
+                        "B) He might be in shock - keep him warm and monitor until EMS arrives",
+                        "C) He's having a heart attack and needs CPR immediately",
+                        "D) He's fine and will wake up soon"
+                    ],
+                    correct: 1,
+                    explanation: "Correct: Pale, cold, shallow breathing, and unresponsiveness are signs of shock. Keep him warm with a blanket or jacket, monitor his breathing and pulse, and continue watching for changes until paramedics arrive."
+                }
+            ]
+        }
+    ]
+};
+
+const gameState = {
+    studentName: '',
+    studentEmail: '',
+    studentOrg: '',
+    score: 0,
+    totalPoints: 0,
+    sectionCompleted: [false, false, false, false, false, false, false],
+    currentSection: 0,
+    mcAnswers: {},
+    fibAnswers: {},
+    matchingAnswers: {},
+    scenarioAnswers: {},
+    aedAnswers: {},
+    shockAnswers: {},
+    rhythmPassed: false,
+    aedPadsPlaced: [false, false],
+    courseStartTime: Date.now(),
+    timeRemaining: 80 * 60 // 80 minutes in seconds
+};
+
+// ============================================
+// INITIALIZATION
+// ============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    startTimer();
+    loadFromLocalStorage();
+    renderQuiz();
+    renderScenarios();
+});
+
+function startTimer() {
+    setInterval(() => {
+        gameState.timeRemaining--;
+        const minutes = Math.floor(gameState.timeRemaining / 60);
+        const seconds = gameState.timeRemaining % 60;
+        document.getElementById('timer').textContent = 
+            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+        if (gameState.timeRemaining <= 0) {
+            alert('Time is up! Submitting your responses now.');
+            generateCertificate();
+        }
+    }, 1000);
+}
+
+function saveStudentInfo() {
+    gameState.studentName = document.getElementById('studentName').value;
+    gameState.studentEmail = document.getElementById('studentEmail').value;
+    gameState.studentOrg = document.getElementById('studentOrg').value;
+
+    if (!gameState.studentName || !gameState.studentEmail) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    saveToLocalStorage();
+}
+
+function startCourse() {
+    gameState.sectionCompleted[0] = true;
+    updateProgress();
+    nextSection();
+}
+
+// ============================================
+// QUIZ RENDERING
+// ============================================
+
+function renderQuiz() {
+    // Multiple Choice
+    let mcHTML = '';
+    quizData.multipleChoice.forEach((q, idx) => {
+        mcHTML += `<div class="question-block">
+            <p><strong>${idx + 1}. ${q.question}</strong></p>`;
+        q.options.forEach((opt, i) => {
+            mcHTML += `<label>
+                <input type="radio" name="mc_${idx}" value="${i}" onchange="recordAnswer('mc', ${idx}, ${i})"> 
+                ${opt}
+            </label>`;
+        });
+        mcHTML += `<div id="mc_feedback_${idx}" class="feedback"></div></div>`;
+    });
+    document.getElementById('mc-container').innerHTML = mcHTML;
+
+    // Fill in the Blank
+    let fibHTML = '<div class="info-box" style="margin-bottom: 25px;"><strong>📝 Answer Bank:</strong> Check, 2, 100-120, immediately, 12, resume, 2, EpiPen, Heimlich, exhausted</div>';
+    quizData.fillInBlank.forEach((q, idx) => {
+        const parts = q.text.split('[BLANK]');
+        fibHTML += `<div class="question-block">
+            <p><strong>${idx + 1}. </strong> ${parts[0]} 
+            <input type="text" id="fib_${idx}" style="width:200px; display:inline;" placeholder="Type answer here" onchange="recordAnswer('fib', ${idx})"> 
+            ${parts[1]}</p>
+            <div id="fib_feedback_${idx}" class="feedback"></div>
+        </div>`;
+    });
+    document.getElementById('fib-container').innerHTML = fibHTML;
+
+    // Matching
+    let matchHTML = `<div class="question-block"><p><strong>${quizData.matching.question}</strong></p>`;
+    const shuffledTerms = quizData.matching.pairs.map(p => p.term).sort(() => Math.random() - 0.5);
+    quizData.matching.pairs.forEach((p, idx) => {
+        matchHTML += `<div style="margin-bottom: 15px;">
+            <select id="match_${idx}" onchange="recordAnswer('matching', ${idx})">
+                <option value="">Select...</option>
+                ${shuffledTerms.map(t => `<option value="${t}">${t}</option>`).join('')}
+            </select>
+            <span style="margin-left: 15px;"> - ${p.definition}</span>
+        </div>`;
+    });
+    matchHTML += `<div id="matching_feedback" class="feedback"></div></div>`;
+    document.getElementById('matching-container').innerHTML = matchHTML;
+}
+
+function recordAnswer(type, idx, value) {
+    if (type === 'mc') {
+        gameState.mcAnswers[idx] = value;
+    } else if (type === 'fib') {
+        gameState.fibAnswers[idx] = document.getElementById(`fib_${idx}`).value;
+    } else if (type === 'matching') {
+        gameState.matchingAnswers[idx] = value;
+    }
+    saveToLocalStorage();
+}
+
+function checkAllAnswers() {
+    let allCorrect = true;
+    let correctCount = 0;
+    let totalCount = 0;
+
+    // Check MC
+    quizData.multipleChoice.forEach((q, idx) => {
+        const selected = gameState.mcAnswers[idx];
+        const feedback = document.getElementById(`mc_feedback_${idx}`);
+        totalCount++;
+        if (selected == q.answer) {
+            feedback.innerHTML = '✅ Correct!';
+            feedback.classList.add('show', 'correct');
+            correctCount++;
+        } else {
+            feedback.innerHTML = '❌ Incorrect. Try again!';
+            feedback.classList.add('show', 'incorrect');
+            allCorrect = false;
+        }
+    });
+
+    // Check FIB
+    quizData.fillInBlank.forEach((q, idx) => {
+        const val = gameState.fibAnswers[idx] ? gameState.fibAnswers[idx].toLowerCase().trim() : '';
+        const feedback = document.getElementById(`fib_feedback_${idx}`);
+        totalCount++;
+        if (val === q.answer.toLowerCase()) {
+            feedback.innerHTML = '✅ Correct!';
+            feedback.classList.add('show', 'correct');
+            correctCount++;
+        } else {
+            feedback.innerHTML = `❌ Incorrect. Hint: ${q.answer}`;
+            feedback.classList.add('show', 'incorrect');
+            allCorrect = false;
+        }
+    });
+
+    // Check Matching
+    let matchCorrect = true;
+    quizData.matching.pairs.forEach((p, idx) => {
+        const val = gameState.matchingAnswers[idx];
+        totalCount++;
+        if (val === p.term) {
+            correctCount++;
+        } else {
+            matchCorrect = false;
+        }
+    });
+    const matchFeedback = document.getElementById('matching_feedback');
+    matchFeedback.classList.add('show');
+    if (matchCorrect) {
+        matchFeedback.innerHTML = '✅ All matches correct!';
+        matchFeedback.classList.add('correct');
+    } else {
+        matchFeedback.innerHTML = '❌ Some matches are incorrect. Try again!';
+        matchFeedback.classList.add('incorrect');
+    }
+
+    if (allCorrect && matchCorrect) {
+        gameState.score += (correctCount / totalCount) * 25;
+        gameState.sectionCompleted[1] = true;
+        alert(`Knowledge Assessment Complete! Score: ${Math.round(correctCount)}/${Math.round(totalCount)}`);
+        updateProgress();
+    }
+
+    saveToLocalStorage();
+}
+
+// ============================================
+// RHYTHM GAME (30 SEC, 3-MISS RULE)
+// ============================================
+
+let rhythmGame = null;
+let rhythmGameConfig = {
+    timeLimit: 30,
+    maxMisses: 3,
+    targetScore: 30
+};
+
+document.getElementById('startRhythmBtn')?.addEventListener('click', function() {
+    if (rhythmGame) return;
+    this.style.display = 'none';
+
+    const config = {
+        type: Phaser.AUTO,
+        width: 400,
+        height: 500,
+        parent: 'game-container',
+        backgroundColor: '#2c3e50',
+        scene: {
+            create: rhythmCreate,
+            update: rhythmUpdate
+        }
+    };
+
+    rhythmGame = new Phaser.Game(config);
+
+    let beats = [];
+    let targetZone;
+    let lastBeatTime = 0;
+    let spaceKey;
+    let score = 0;
+    let scoreText;
+    let missText;
+    let timerText;
+    let hitFeedback;
+    let misses = 0;
+    let gameTime = 0;
+    const bpm = 110;
+    const beatInterval = 60000 / bpm;
+
+    function rhythmCreate() {
+        const scene = this;
+        
+        // Target zone
+        targetZone = scene.add.rectangle(200, 400, 400, 40, 0x1e88e5, 0.5);
+        scene.add.text(200, 400, 'HIT SPACE HERE', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+
+        scoreText = scene.add.text(10, 10, 'Score: 0', { fontSize: '20px', fill: '#fff' });
+        missText = scene.add.text(10, 40, `Misses: 0/3`, { fontSize: '16px', fill: '#fdd835' });
+        timerText = scene.add.text(350, 10, 'Time: 30s', { fontSize: '16px', fill: '#fff' });
+        hitFeedback = scene.add.text(200, 200, '', { fontSize: '32px', fill: '#e53935' }).setOrigin(0.5);
+
+        spaceKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+        scene.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                gameTime++;
+                timerText.setText(`Time: ${30 - gameTime}s`);
+                
+                if (gameTime >= 30) {
+                    endRhythmGame(scene, score, misses);
+                }
+            },
+            loop: true
+        });
+    }
+
+    function rhythmUpdate(time, delta) {
+        // Spawn beats
+        if (time > lastBeatTime + beatInterval) {
+            let circle = this.add.circle(200, 0, 15, 0x43a047);
+            beats.push(circle);
+            lastBeatTime = time;
+        }
+
+        // Move beats
+        for (let i = beats.length - 1; i >= 0; i--) {
+            beats[i].y += 4;
+
+            if (beats[i].y > 500) {
+                beats[i].destroy();
+                beats.splice(i, 1);
+                showFeedback('MISS!', '#e53935', hitFeedback);
+                misses++;
+                missText.setText(`Misses: ${misses}/3`);
+                
+                if (misses >= 3) {
+                    endRhythmGame(this, score, misses);
+                }
+            }
+        }
+
+        // Check Input
+        if (Phaser.Input.Keyboard.JustDown(spaceKey)) {
+            let hit = false;
+            for (let i = beats.length - 1; i >= 0; i--) {
+                if (beats[i].y > 360 && beats[i].y < 440) {
+                    beats[i].destroy();
+                    beats.splice(i, 1);
+                    hit = true;
+
+                    if (beats[i].y > 390 && beats[i].y < 410) {
+                        showFeedback('PERFECT!', '#43a047', hitFeedback);
+                        score += 2;
+                    } else {
+                        showFeedback('GOOD', '#fdd835', hitFeedback);
+                        score += 1;
+                    }
+                    scoreText.setText('Score: ' + score);
+                    break;
+                }
+            }
+            if (!hit) {
+                showFeedback('OFF BEAT', '#e53935', hitFeedback);
+                misses++;
+                missText.setText(`Misses: ${misses}/3`);
+                
+                if (misses >= 3) {
+                    endRhythmGame(this, score, misses);
+                }
+            }
+        }
+    }
+
+    function showFeedback(text, color, feedback) {
+        feedback.setText(text);
+        feedback.setColor(color);
+        feedback.setAlpha(1);
+        rhythmGame.scene.scenes[0].tweens.add({
+            targets: feedback,
+            alpha: 0,
+            duration: 500,
+            ease: 'Power2'
+        });
+    }
+
+    function endRhythmGame(scene, finalScore, finalMisses) {
+        if (finalMisses >= 3) {
+            const feedbackDiv = document.getElementById('rhythm-feedback');
+            feedbackDiv.innerHTML = `❌ You exceeded the 3-miss limit. Your score was ${finalScore}. Please try again.`;
+            feedbackDiv.classList.add('show', 'incorrect');
+            document.getElementById('startRhythmBtn').style.display = 'block';
+            document.getElementById('startRhythmBtn').textContent = 'Try Again';
+            scene.physics.pause();
+        } else if (finalScore >= rhythmGameConfig.targetScore) {
+            const feedbackDiv = document.getElementById('rhythm-feedback');
+            feedbackDiv.innerHTML = `✅ Excellent rhythm! You scored ${finalScore}/30. You've mastered CPR compression timing!`;
+            feedbackDiv.classList.add('show', 'correct');
+            gameState.rhythmPassed = true;
+            gameState.score += 20;
+            gameState.sectionCompleted[2] = true;
+            updateProgress();
+            document.getElementById('continueFromRhythm').disabled = false;
+            scene.physics.pause();
+        } else {
+            const feedbackDiv = document.getElementById('rhythm-feedback');
+            feedbackDiv.innerHTML = `⚠️ Score too low (${finalScore}/30). Try again to improve your rhythm accuracy!`;
+            feedbackDiv.classList.add('show', 'incorrect');
+            document.getElementById('startRhythmBtn').style.display = 'block';
+            document.getElementById('startRhythmBtn').textContent = 'Try Again';
+            scene.physics.pause();
+        }
+    }
+});
+
+// ============================================
+// AED MODULE
+// ============================================
+
+function selectAEDPad(padNumber) {
+    gameState.aedPadsPlaced[padNumber - 1] = !gameState.aedPadsPlaced[padNumber - 1];
+    
+    const card = document.querySelectorAll('.aed-step-card')[padNumber - 1];
+    const check = document.getElementById(`aed${padNumber}-check`);
+    
+    if (gameState.aedPadsPlaced[padNumber - 1]) {
+        card.classList.add('completed');
+        check.style.display = 'inline';
+    } else {
+        card.classList.remove('completed');
+        check.style.display = 'none';
+    }
+}
+
+function checkAEDAnswers() {
+    const q1_selected = document.querySelector('input[name="aed_q1"]:checked');
+    const q2_selected = document.querySelector('input[name="aed_q2"]:checked');
+    
+    const q1_feedback = document.getElementById('aed_q1_feedback');
+    const q2_feedback = document.getElementById('aed_q2_feedback');
+
+    let aedCorrect = 0;
+
+    if (q1_selected && q1_selected.nextElementSibling.textContent.includes('Check responsiveness')) {
+        q1_feedback.innerHTML = '✅ Correct!';
+        q1_feedback.classList.add('show', 'correct');
+        aedCorrect++;
+    } else {
+        q1_feedback.innerHTML = '❌ Incorrect.';
+        q1_feedback.classList.add('show', 'incorrect');
+    }
+
+    if (q2_selected && q2_selected.nextElementSibling.textContent.includes('Resume CPR')) {
+        q2_feedback.innerHTML = '✅ Correct!';
+        q2_feedback.classList.add('show', 'correct');
+        aedCorrect++;
+    } else {
+        q2_feedback.innerHTML = '❌ Incorrect.';
+        q2_feedback.classList.add('show', 'incorrect');
+    }
+
+    if (gameState.aedPadsPlaced[0] && gameState.aedPadsPlaced[1]) {
+        aedCorrect++;
+    }
+
+    if (aedCorrect === 3) {
+        gameState.score += 15;
+        gameState.sectionCompleted[3] = true;
+        updateProgress();
+    }
+
+    saveToLocalStorage();
+}
+
+// ============================================
+// SHOCK MODULE
+// ============================================
+
+function checkShockAnswers() {
+    const q1_selected = document.querySelector('input[name="shock_q1"]:checked');
+    const q2_selected = document.querySelector('input[name="shock_q2"]:checked');
+
+    const q1_feedback = document.getElementById('shock_q1_feedback');
+    const q2_feedback = document.getElementById('shock_q2_feedback');
+
+    let shockCorrect = 0;
+
+    if (q1_selected && q1_selected.nextElementSibling.textContent.includes('Shock')) {
+        q1_feedback.innerHTML = '✅ Correct!';
+        q1_feedback.classList.add('show', 'correct');
+        shockCorrect++;
+    } else {
+        q1_feedback.innerHTML = '❌ Incorrect.';
+        q1_feedback.classList.add('show', 'incorrect');
+    }
+
+    if (q2_selected && q2_selected.nextElementSibling.textContent.includes('Call 911')) {
+        q2_feedback.innerHTML = '✅ Correct!';
+        q2_feedback.classList.add('show', 'correct');
+        shockCorrect++;
+    } else {
+        q2_feedback.innerHTML = '❌ Incorrect.';
+        q2_feedback.classList.add('show', 'incorrect');
+    }
+
+    if (shockCorrect === 2) {
+        gameState.score += 10;
+        gameState.sectionCompleted[4] = true;
+        updateProgress();
+    }
+
+    saveToLocalStorage();
+}
+
+// ============================================
+// SCENARIOS RENDERING & CHECKING
+// ============================================
+
+function renderScenarios() {
+    let scenariosHTML = '';
+    quizData.scenarios.forEach((scenario, sIdx) => {
+        scenariosHTML += `
+        <div style="margin-bottom: 40px; page-break-inside: avoid;">
+            <h3 style="color: var(--primary); font-size: 1.3em; margin-top: 30px; margin-bottom: 15px;">${scenario.title}</h3>
+            <div class="scenario-story" style="font-size: 1em; line-height: 1.8;">
+                ${scenario.story}
+            </div>
+            
+            <div style="margin: 25px 0;">`;
+        
+        scenario.questions.forEach((q, qIdx) => {
+            const questionId = `scenario${sIdx}_q${qIdx}`;
+            scenariosHTML += `
+            <div class="question-block" style="margin-bottom: 20px;">
+                <p><strong>Question ${qIdx + 1}:</strong> ${q.q}</p>
+                <div style="margin: 15px 0;">`;
+            
+            q.options.forEach((option, optIdx) => {
+                scenariosHTML += `
+                    <label style="display: block; margin-bottom: 10px; padding: 10px; border-radius: 4px; cursor: pointer; border: 2px solid #ddd; transition: all 0.3s;">
+                        <input type="radio" name="${questionId}" value="${optIdx}" onchange="recordScenarioAnswer('${questionId}', ${optIdx}, '${q.explanation.replace(/'/g, "\\'")}')"> 
+                        ${option}
+                    </label>`;
+            });
+            
+            scenariosHTML += `
+                </div>
+                <div id="${questionId}_feedback" class="feedback" style="margin-top: 10px;"></div>
+            </div>`;
+        });
+        
+        scenariosHTML += `</div></div>`;
+    });
+    
+    document.getElementById('scenarios-container').innerHTML = scenariosHTML;
+}
+
+function recordScenarioAnswer(questionId, selectedIndex, explanation) {
+    gameState.scenarioAnswers[questionId] = selectedIndex;
+    
+    // Show immediate feedback
+    const feedbackDiv = document.getElementById(`${questionId}_feedback`);
+    feedbackDiv.classList.add('show');
+    
+    // Find the scenario and question
+    const parts = questionId.match(/scenario(\d+)_q(\d+)/);
+    if (parts) {
+        const scenarioIdx = parseInt(parts[1]);
+        const questionIdx = parseInt(parts[2]);
+        const scenario = quizData.scenarios[scenarioIdx];
+        const question = scenario.questions[questionIdx];
+        
+        if (selectedIndex === question.correct) {
+            feedbackDiv.innerHTML = `✅ <strong>Correct!</strong> ${question.explanation}`;
+            feedbackDiv.classList.add('correct');
+            feedbackDiv.classList.remove('incorrect');
+            gameState.score += 10;
+        } else {
+            feedbackDiv.innerHTML = `❌ <strong>Incorrect.</strong> ${question.explanation}`;
+            feedbackDiv.classList.add('incorrect');
+            feedbackDiv.classList.remove('correct');
+        }
+    }
+    
+    saveToLocalStorage();
+}
+
+function checkScenarioAnswers() {
+    let correctCount = 0;
+    let totalQuestions = 0;
+    
+    // Count all scenario questions
+    quizData.scenarios.forEach((scenario, sIdx) => {
+        scenario.questions.forEach((q, qIdx) => {
+            totalQuestions++;
+            const questionId = `scenario${sIdx}_q${qIdx}`;
+            
+            // Check if answer was selected
+            if (gameState.scenarioAnswers[questionId] !== undefined) {
+                if (gameState.scenarioAnswers[questionId] === q.correct) {
+                    correctCount++;
+                }
+            }
+        });
+    });
+    
+    const percentage = Math.round((correctCount / totalQuestions) * 100);
+    
+    if (percentage >= 70) {
+        gameState.score += 25;
+        gameState.sectionCompleted[5] = true;
+        updateProgress();
+        alert(`Scenario Assessment Complete!\n\nYou answered ${correctCount}/${totalQuestions} questions correctly (${percentage}%)\n\nGreat medical decision-making!`);
+    } else {
+        alert(`Scenario Assessment: ${correctCount}/${totalQuestions} correct (${percentage}%)\n\nYou need 70% to pass. Review your incorrect answers and try again.`);
+    }
+
+    saveToLocalStorage();
+}
+
+// ============================================
+// CERTIFICATE GENERATION
+// ============================================
+
+function generateCertificate() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const certID = 'CERT-' + gameState.studentName.replace(/\s+/g, '') + '-' + Date.now();
+
+    // Calculate final score percentage
+    const maxScore = 100;
+    const percentage = Math.min(100, Math.round((gameState.score / maxScore) * 100));
+
+    document.getElementById('certStudentName').textContent = gameState.studentName;
+    document.getElementById('certScore').textContent = `Score: ${percentage}%`;
+    document.getElementById('certDate').textContent = dateStr;
+    document.getElementById('certID').textContent = certID;
+
+    gameState.certificateData = {
+        studentName: gameState.studentName,
+        studentEmail: gameState.studentEmail,
+        studentOrg: gameState.studentOrg,
+        score: percentage,
+        date: dateStr,
+        certID: certID,
+        completionTime: Math.round((Date.now() - gameState.courseStartTime) / 1000)
+    };
+
+    gameState.sectionCompleted[7] = true;
+    saveToLocalStorage();
+
+    showSection('certificate-section');
+}
+
+function downloadCertificate() {
+    const { jsPDF } = window.jspdf;
+    if (!jsPDF) {
+        alert('PDF library not loaded. Try printing instead.');
+        printCertificate();
+        return;
+    }
+
+    const doc = new jsPDF('landscape', 'in', 'letter');
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, 11, 8.5, 'F');
+
+    // Border
+    doc.setDrawColor(229, 57, 53);
+    doc.setLineWidth(0.05);
+    doc.rect(0.3, 0.3, 10.4, 7.9);
+
+    // Title
+    doc.setFontSize(40);
+    doc.setTextColor(229, 57, 53);
+    doc.text('CERTIFICATE OF COMPLETION', 5.5, 1.2, { align: 'center' });
+
+    // Body text
+    doc.setFontSize(12);
+    doc.setTextColor(44, 62, 80);
+    doc.text('This certifies that', 5.5, 2, { align: 'center' });
+
+    doc.setFontSize(18);
+    doc.setTextColor(229, 57, 53);
+    doc.text(gameState.certificateData.studentName, 5.5, 2.8, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setTextColor(44, 62, 80);
+    doc.text('has successfully completed the', 5.5, 3.4, { align: 'center' });
+    doc.text('CPR & First Aid Certification Training Course', 5.5, 3.8, { align: 'center' });
+
+    doc.setFontSize(14);
+    doc.setTextColor(67, 160, 71);
+    doc.text(`Score: ${gameState.certificateData.score}%`, 5.5, 4.5, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setTextColor(44, 62, 80);
+    doc.text(`Date: ${gameState.certificateData.date}`, 2, 6.5);
+    doc.text(`Certificate ID: ${gameState.certificateData.certID}`, 2, 7);
+    doc.text('Organization: ' + gameState.studentOrg, 8, 6.5);
+
+    doc.save(`CPR_Certificate_${gameState.studentName.replace(/\s+/g, '_')}.pdf`);
+}
+
+function printCertificate() {
+    window.print();
+}
+
+function saveToDrive() {
+    const clientId = 'YOUR_CLIENT_ID_HERE'; // You'll need to set this
+    const clientSecret = 'YOUR_CLIENT_SECRET_HERE';
+    const redirectUri = window.location.origin + window.location.pathname;
+
+    alert('To save to Google Drive:\n\n1. Go to Google Cloud Console\n2. Create an OAuth 2.0 credential\n3. Add your Client ID to the code\n4. Grant Google Drive permissions\n\nFor now, your certificate is saved locally. Download the PDF to keep it.');
+}
+
+// ============================================
+// NAVIGATION & PROGRESS
+// ============================================
+
+function nextSection() {
+    gameState.currentSection++;
+    showSectionByIndex(gameState.currentSection);
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function showSectionByIndex(index) {
+    const sectionIds = [
+        'intro-section',
+        'knowledge-section',
+        'rhythm-section',
+        'aed-section',
+        'shock-section',
+        'scenarios-section',
+        'final-section',
+        'certificate-section'
+    ];
+
+    if (index < sectionIds.length) {
+        showSection(sectionIds[index]);
+    }
+}
+
+function reviewSection(section) {
+    if (section === 'knowledge') {
+        showSection('knowledge-section');
+    }
+}
+
+function updateProgress() {
+    const completed = gameState.sectionCompleted.filter(c => c).length;
+    const percentage = (completed / gameState.sectionCompleted.length) * 100;
+    document.getElementById('progressFill').style.width = percentage + '%';
+}
+
+// ============================================
+// LOCAL STORAGE
+// ============================================
+
+function saveToLocalStorage() {
+    localStorage.setItem('cprCourseState', JSON.stringify(gameState));
+}
+
+function loadFromLocalStorage() {
+    const saved = localStorage.getItem('cprCourseState');
+    if (saved) {
+        const loaded = JSON.parse(saved);
+        Object.assign(gameState, loaded);
+        updateProgress();
+    }
+}
+</script>
+
+<!-- Include jsPDF for certificate generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+</html>
