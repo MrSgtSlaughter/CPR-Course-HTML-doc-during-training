@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPR: The Silent Responder - Red Cross Curriculum</title>
+    <title>CPR: The Silent Responder - Extended Edition</title>
     <style>
         * {
             margin: 0;
@@ -17,6 +17,7 @@
             --danger-red: #ff1744;
             --pulse-blue: #00bfff;
             --warning-yellow: #ffeb3b;
+            --success-green: #4caf50;
             --text-primary: #ffffff;
             --text-dim: #888888;
         }
@@ -47,15 +48,8 @@
             z-index: 999;
         }
 
-        .main-container {
-            flex: 1;
-            display: flex;
-            position: relative;
-            z-index: 1;
-        }
-
         .reference-card {
-            width: 250px;
+            width: 280px;
             background: rgba(0, 0, 0, 0.95);
             border-right: 3px solid var(--monitor-green);
             padding: 20px;
@@ -77,26 +71,34 @@
         .ref-title {
             color: var(--monitor-green);
             text-shadow: 0 0 5px var(--monitor-green);
-            font-size: 1.1em;
+            font-size: 1em;
             margin-bottom: 15px;
             border-bottom: 2px solid var(--monitor-green);
             padding-bottom: 10px;
         }
 
         .ref-step {
-            margin: 10px 0;
-            padding: 8px;
+            margin: 8px 0;
+            padding: 6px;
             background: rgba(0, 255, 65, 0.05);
             border-left: 2px solid var(--pulse-blue);
-            padding-left: 10px;
-            font-size: 0.85em;
+            padding-left: 8px;
+            font-size: 0.8em;
             color: var(--text-primary);
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .ref-key {
             color: var(--warning-yellow);
             font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            z-index: 1;
         }
 
         .container {
@@ -111,16 +113,16 @@
         }
 
         .container.ref-open {
-            margin-left: 250px;
+            margin-left: 280px;
         }
 
         .screen {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
             border: 3px solid var(--monitor-green);
             border-radius: 10px;
-            padding: 40px;
+            padding: 35px;
             box-shadow: 0 0 20px var(--pulse-blue), inset 0 0 20px rgba(0, 255, 65, 0.1);
             animation: flicker 0.15s infinite;
         }
@@ -132,57 +134,46 @@
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            animation: slideDown 0.6s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            margin-bottom: 25px;
         }
 
         h1 {
-            font-size: 2.2em;
+            font-size: 2em;
             color: var(--danger-red);
             text-shadow: 0 0 10px var(--danger-red);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             letter-spacing: 2px;
         }
 
         h2 {
-            font-size: 1.8em;
+            font-size: 1.5em;
             color: var(--pulse-blue);
-            text-shadow: 0 0 10px var(--pulse-blue);
-            margin: 20px 0;
+            text-shadow: 0 0 8px var(--pulse-blue);
+            margin: 15px 0;
         }
 
         .subtitle {
             color: var(--pulse-blue);
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-shadow: 0 0 5px var(--pulse-blue);
         }
 
         /* MENU */
-        .menu {
-            display: none;
-        }
-
-        .menu.active {
-            display: block;
-        }
+        .menu { display: none; }
+        .menu.active { display: block; }
 
         .scenario-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin: 30px 0;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin: 25px 0;
         }
 
         .scenario-card {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--monitor-green);
             border-radius: 5px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -208,21 +199,20 @@
         }
 
         .scenario-number {
-            font-size: 0.8em;
+            font-size: 0.75em;
             color: var(--text-dim);
-            margin-bottom: 5px;
         }
 
         .scenario-name {
-            font-size: 1.1em;
+            font-size: 1em;
             color: var(--monitor-green);
             font-weight: bold;
             text-shadow: 0 0 5px var(--monitor-green);
+            margin: 5px 0;
         }
 
         .scenario-status {
-            font-size: 0.8em;
-            margin-top: 8px;
+            font-size: 0.75em;
             color: var(--warning-yellow);
         }
 
@@ -230,19 +220,20 @@
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--pulse-blue);
             border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 15px;
+            margin: 15px 0;
         }
 
         .progress-label {
             color: var(--pulse-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
             text-shadow: 0 0 5px var(--pulse-blue);
         }
 
         .progress-bar-container {
             width: 100%;
-            height: 25px;
+            height: 20px;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--monitor-green);
             border-radius: 3px;
@@ -254,55 +245,48 @@
             background: linear-gradient(90deg, var(--pulse-blue), var(--monitor-green));
             width: 0%;
             transition: width 0.3s;
-            box-shadow: 0 0 10px var(--monitor-green);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8em;
+            font-size: 0.75em;
             color: #000;
             font-weight: bold;
         }
 
         /* QUIZ */
-        .quiz {
-            display: none;
-        }
-
-        .quiz.active {
-            display: block;
-        }
+        .quiz { display: none; }
+        .quiz.active { display: block; }
 
         .quiz-progress {
             color: var(--warning-yellow);
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 0.95em;
+            margin-bottom: 15px;
+            font-size: 0.9em;
         }
 
         .question-box {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--danger-red);
             border-radius: 5px;
-            padding: 25px;
-            margin: 20px 0;
-            min-height: 150px;
+            padding: 20px;
+            margin: 15px 0;
         }
 
         .question-text {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: var(--text-primary);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.5;
         }
 
         .answer-options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .answer-btn {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             background: rgba(0, 255, 65, 0.1);
             border: 2px solid var(--monitor-green);
@@ -311,6 +295,7 @@
             border-radius: 3px;
             transition: all 0.2s;
             font-family: 'Courier New', monospace;
+            font-size: 0.9em;
         }
 
         .answer-btn:hover {
@@ -325,8 +310,8 @@
 
         .answer-btn.correct {
             background: rgba(76, 175, 80, 0.3);
-            border-color: #4caf50;
-            color: #4caf50;
+            border-color: var(--success-green);
+            color: var(--success-green);
         }
 
         .answer-btn.incorrect {
@@ -335,96 +320,50 @@
             color: var(--danger-red);
         }
 
-        .quiz-result {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--pulse-blue);
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .result-score {
-            font-size: 2em;
-            color: var(--warning-yellow);
-            text-shadow: 0 0 10px var(--warning-yellow);
-            margin-bottom: 10px;
-        }
-
-        .result-message {
-            font-size: 1.1em;
-            color: var(--text-primary);
-        }
-
         /* GAMEPLAY */
-        .gameplay {
-            display: none;
-        }
-
-        .gameplay.active {
-            display: block;
-        }
+        .gameplay { display: none; }
+        .gameplay.active { display: block; }
 
         .scenario-title {
             color: var(--danger-red);
             text-shadow: 0 0 10px var(--danger-red);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
+            font-size: 1.4em;
+        }
+
+        .step-info {
+            background: rgba(0, 0, 0, 0.6);
+            border-bottom: 2px solid var(--monitor-green);
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--monitor-green);
+            font-size: 0.9em;
         }
 
         .game-area {
-            min-height: 400px;
+            min-height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 20px;
-        }
-
-        .patient-monitor {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--monitor-green);
-            border-radius: 5px;
-            padding: 20px;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .monitor-status {
-            color: var(--monitor-green);
-            text-shadow: 0 0 10px var(--monitor-green);
-            margin: 5px 0;
-            font-size: 0.95em;
-        }
-
-        .step-display {
-            font-size: 1.2em;
-            color: var(--warning-yellow);
-            text-shadow: 0 0 5px var(--warning-yellow);
-            margin: 10px 0;
+            gap: 15px;
         }
 
         .prompt {
             background: rgba(255, 23, 68, 0.1);
             border: 2px solid var(--danger-red);
             border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
-            font-size: 1.1em;
+            padding: 15px;
+            font-size: 1em;
             color: var(--text-primary);
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             animation: pulse-border 1s infinite;
+            line-height: 1.4;
         }
 
         @keyframes pulse-border {
@@ -432,17 +371,132 @@
             50% { border-color: var(--pulse-blue); }
         }
 
-        .typing-test {
+        /* RHYTHM GAME */
+        .rhythm-game {
             display: none;
-        }
-
-        .typing-test.active {
-            display: block;
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--pulse-blue);
             border-radius: 5px;
             padding: 20px;
-            margin: 20px 0;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .rhythm-game.active {
+            display: block;
+        }
+
+        .bpm-display {
+            font-size: 2em;
+            color: var(--warning-yellow);
+            text-shadow: 0 0 10px var(--warning-yellow);
+            margin: 10px 0;
+        }
+
+        .rhythm-counter {
+            font-size: 1.5em;
+            color: var(--danger-red);
+            text-shadow: 0 0 10px var(--danger-red);
+            margin: 10px 0;
+        }
+
+        .rhythm-hint {
+            color: var(--text-dim);
+            font-size: 0.85em;
+            margin: 8px 0;
+        }
+
+        .rhythm-btn {
+            padding: 15px 40px;
+            margin: 15px auto;
+            font-size: 1.1em;
+            background: rgba(255, 23, 68, 0.2);
+            border: 2px solid var(--danger-red);
+            color: var(--danger-red);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.1s;
+            font-weight: bold;
+        }
+
+        .rhythm-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 20px var(--danger-red);
+        }
+
+        /* IMAGE SELECTION */
+        .image-challenge {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--pulse-blue);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .image-challenge.active {
+            display: block;
+        }
+
+        .image-label {
+            color: var(--pulse-blue);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px var(--pulse-blue);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .image-option {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--monitor-green);
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 3em;
+        }
+
+        .image-option:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 15px var(--monitor-green);
+            transform: scale(1.05);
+        }
+
+        .image-option.selected {
+            background: rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 20px var(--monitor-green);
+            border-color: var(--warning-yellow);
+        }
+
+        .image-option.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--success-green);
+        }
+
+        .image-option.incorrect {
+            background: rgba(255, 23, 68, 0.2);
+            border-color: var(--danger-red);
+        }
+
+        /* TYPING */
+        .typing-test {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--pulse-blue);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .typing-test.active {
+            display: block;
         }
 
         .typing-label {
@@ -454,14 +508,15 @@
 
         .typing-input {
             width: 100%;
-            padding: 12px;
-            font-size: 1em;
+            padding: 10px;
+            font-size: 0.95em;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--monitor-green);
             color: var(--monitor-green);
             border-radius: 3px;
             font-family: 'Courier New', monospace;
             text-shadow: 0 0 5px var(--monitor-green);
+            margin: 8px 0;
         }
 
         .typing-input:focus {
@@ -471,13 +526,13 @@
 
         .typing-accuracy {
             color: var(--warning-yellow);
-            font-size: 0.9em;
-            margin-top: 10px;
+            font-size: 0.85em;
+            margin-top: 8px;
         }
 
         .submit-typing-btn {
-            margin-top: 12px;
-            padding: 10px 20px;
+            margin-top: 10px;
+            padding: 8px 20px;
             background: rgba(0, 255, 65, 0.2);
             border: 2px solid var(--monitor-green);
             color: var(--monitor-green);
@@ -486,6 +541,7 @@
             font-family: 'Courier New', monospace;
             transition: all 0.2s;
             font-weight: bold;
+            font-size: 0.9em;
         }
 
         .submit-typing-btn:hover {
@@ -495,15 +551,15 @@
 
         .button-group {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 0.95em;
+            padding: 10px 20px;
+            font-size: 0.9em;
             font-family: 'Courier New', monospace;
             border: 2px solid var(--monitor-green);
             background: rgba(0, 255, 65, 0.1);
@@ -513,7 +569,7 @@
             transition: all 0.3s;
             text-shadow: 0 0 5px var(--monitor-green);
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         button:hover:not(:disabled) {
@@ -527,51 +583,21 @@
             cursor: not-allowed;
         }
 
-        button.danger {
-            border-color: var(--danger-red);
-            color: var(--danger-red);
-            background: rgba(255, 23, 68, 0.1);
-            text-shadow: 0 0 5px var(--danger-red);
-        }
-
-        button.danger:hover:not(:disabled) {
-            background: rgba(255, 23, 68, 0.3);
-            box-shadow: 0 0 20px var(--danger-red);
-        }
-
         /* GAME OVER */
-        .game-over {
-            display: none;
-        }
-
-        .game-over.active {
-            display: block;
-            text-align: center;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .game-over h2 {
-            font-size: 2em;
-            margin: 20px 0;
-            text-shadow: 0 0 10px var(--danger-red);
-        }
+        .game-over { display: none; }
+        .game-over.active { display: block; text-align: center; }
 
         .stats-box {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--monitor-green);
             border-radius: 5px;
             padding: 20px;
-            margin: 20px 0;
+            margin: 15px 0;
             text-align: left;
         }
 
         .stat-line {
-            font-size: 1em;
+            font-size: 0.95em;
             margin: 8px 0;
             color: var(--monitor-green);
             display: flex;
@@ -586,9 +612,9 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
-            font-size: 0.8em;
+            font-size: 0.75em;
             z-index: 998;
             border: 2px solid var(--monitor-green);
             background: rgba(0, 255, 65, 0.1);
@@ -605,24 +631,23 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 280px;
-            max-height: 150px;
+            width: 260px;
+            max-height: 120px;
             background: rgba(0, 0, 0, 0.95);
             border: 2px solid var(--monitor-green);
             border-radius: 5px;
-            padding: 8px;
+            padding: 6px;
             overflow-y: auto;
-            font-size: 0.7em;
+            font-size: 0.65em;
             color: var(--monitor-green);
             z-index: 997;
-            font-family: 'Courier New', monospace;
         }
 
         .debug-entry {
-            margin: 2px 0;
-            padding: 2px 4px;
+            margin: 1px 0;
+            padding: 1px 3px;
             border-left: 2px solid var(--monitor-green);
-            padding-left: 6px;
+            padding-left: 4px;
         }
 
         .debug-entry.error {
@@ -630,29 +655,196 @@
             color: var(--danger-red);
         }
 
-        .debug-entry.warning {
-            border-left-color: var(--warning-yellow);
-            color: var(--warning-yellow);
+        /* CERTIFICATE */
+        .certificate-screen { display: none; }
+        .certificate-screen.active { display: block; text-align: center; }
+
+        .certificate {
+            background: linear-gradient(135deg, #f5f5dc 0%, #fffacd 50%, #f5f5dc 100%);
+            border: 8px solid #8b0000;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 20px 0;
+            color: #1a1a1a;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(139, 0, 0, 0.1);
+            font-family: 'Georgia', serif;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .keyboard-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            font-size: 0.75em;
-            color: var(--text-dim);
-            z-index: 997;
+        .cert-header {
+            border-bottom: 3px solid #8b0000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        .keyboard-hint span {
+        .cert-logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .certificate h1 {
+            font-size: 2.5em;
+            color: #8b0000;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .cert-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin: 10px 0 0 0;
+            font-style: italic;
+        }
+
+        .cert-body {
+            font-size: 1em;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .cert-label {
+            font-size: 1.1em;
+            color: #333;
+            margin: 15px 0 10px 0;
+        }
+
+        .cert-name {
+            font-size: 2em;
+            color: #8b0000;
+            font-weight: bold;
+            margin: 15px 0;
+            text-decoration: underline;
+            letter-spacing: 1px;
+        }
+
+        .cert-text {
+            color: #333;
+            margin: 12px 0;
+            font-size: 0.95em;
+        }
+
+        .cert-competencies {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 20px 0;
+            text-align: left;
+            background: rgba(139, 0, 0, 0.05);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .cert-competencies li {
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .cert-date {
+            color: #8b0000;
+            font-weight: bold;
+        }
+
+        .cert-score {
+            color: #8b0000;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .cert-footer {
+            border-top: 3px solid #8b0000;
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .cert-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .cert-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        #downloadCertBtn, #printCertBtn, #newPlayerBtn {
+            padding: 12px 25px;
+            font-size: 0.95em;
+            background: rgba(139, 0, 0, 0.2);
+            border: 2px solid #8b0000;
+            color: #8b0000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        #downloadCertBtn:hover, #printCertBtn:hover {
+            background: rgba(139, 0, 0, 0.4);
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        #newPlayerBtn {
+            background: rgba(0, 255, 65, 0.2);
+            border-color: var(--monitor-green);
             color: var(--monitor-green);
-            text-shadow: 0 0 3px var(--monitor-green);
+        }
+
+        #newPlayerBtn:hover {
+            background: rgba(0, 255, 65, 0.4);
+            box-shadow: 0 0 20px var(--monitor-green);
+        }
+
+        .drive-instructions {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--pulse-blue);
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .drive-instructions h3 {
+            color: var(--pulse-blue);
+            text-shadow: 0 0 10px var(--pulse-blue);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .instruction-box {
+            background: rgba(0, 255, 65, 0.05);
+            border-left: 3px solid var(--monitor-green);
+            padding: 15px;
+            border-radius: 3px;
+        }
+
+        .instruction-box p {
+            color: var(--text-primary);
+            margin: 10px 0;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .instruction-box strong {
+            color: var(--warning-yellow);
+            text-shadow: 0 0 5px var(--warning-yellow);
         }
     </style>
 </head>
 <body>
     <div class="scanlines"></div>
-
     <div class="reference-card" id="referenceCard"></div>
 
     <div class="main-container">
@@ -662,7 +854,7 @@
             <div class="screen">
                 <div class="header">
                     <h1>CPR: THE SILENT RESPONDER</h1>
-                    <p class="subtitle">Red Cross Curriculum Simulator</p>
+                    <p class="subtitle">Extended Red Cross Curriculum - 50 Minutes</p>
                 </div>
 
                 <!-- MENU -->
@@ -670,15 +862,11 @@
                     <div class="progress-section">
                         <div class="progress-label">Overall Progress</div>
                         <div class="progress-bar-container">
-                            <div class="progress-bar" id="progressBar" style="width: 0%">
-                                <span id="progressText">0%</span>
-                            </div>
+                            <div class="progress-bar" id="progressBar">0%</div>
                         </div>
                     </div>
-
                     <div class="scenario-grid" id="scenarioGrid"></div>
-
-                    <div style="text-align: center; margin-top: 30px;">
+                    <div style="text-align: center;">
                         <button id="leaderboardBtn">VIEW LEADERBOARD</button>
                     </div>
                 </div>
@@ -687,17 +875,10 @@
                 <div class="quiz" id="quiz">
                     <h2 id="quizTitle">SCENARIO QUIZ</h2>
                     <div class="quiz-progress" id="quizProgress">Question 1 of 5</div>
-                    
                     <div class="question-box">
                         <div class="question-text" id="questionText"></div>
                         <div class="answer-options" id="answerOptions"></div>
                     </div>
-
-                    <div class="quiz-result" id="quizResult" style="display: none;">
-                        <div class="result-score" id="resultScore"></div>
-                        <div class="result-message" id="resultMessage"></div>
-                    </div>
-
                     <div class="button-group">
                         <button id="quizSubmitBtn">SUBMIT ANSWER</button>
                         <button id="quizBackBtn">RETURN TO MENU</button>
@@ -707,28 +888,31 @@
                 <!-- GAMEPLAY -->
                 <div class="gameplay" id="gameplay">
                     <h2 class="scenario-title" id="scenarioTitle"></h2>
-
+                    <div class="step-info" id="stepInfo"></div>
                     <div class="game-area">
-                        <div class="patient-monitor">
-                            <div class="monitor-status" id="monitorStatus">SCENARIO: ACTIVE</div>
-                            <div class="step-display" id="stepDisplay"></div>
-                        </div>
-
                         <div class="prompt" id="prompt"></div>
-
+                        <div class="rhythm-game" id="rhythmGame">
+                            <div class="bpm-display" id="bpmDisplay">BPM: 0</div>
+                            <div class="rhythm-counter" id="rhythmCounter">0</div>
+                            <div class="rhythm-hint" id="rhythmHint"></div>
+                            <button class="rhythm-btn" id="rhythmBtn">TAP / PRESS SPACE</button>
+                        </div>
+                        <div class="image-challenge" id="imageChallenge">
+                            <div class="image-label" id="imageLabel"></div>
+                            <div class="image-grid" id="imageGrid"></div>
+                        </div>
                         <div class="typing-test" id="typingTest">
                             <div class="typing-label">Type the correct response:</div>
                             <input type="text" class="typing-input" id="typingInput" placeholder="Enter response...">
                             <div class="typing-accuracy" id="typingAccuracy"></div>
                         </div>
-
                         <div class="button-group" id="buttonGroup"></div>
                     </div>
                 </div>
 
                 <!-- GAME OVER -->
                 <div class="game-over" id="gameOver">
-                    <h2 id="gameOverTitle">SCENARIO COMPLETE</h2>
+                    <h2>SCENARIO COMPLETE</h2>
                     <div class="stats-box">
                         <div class="stat-line">
                             <span class="stat-label">QUIZ SCORE:</span>
@@ -742,19 +926,65 @@
                             <span class="stat-label">SPEED BONUS:</span>
                             <span id="finalSpeedBonus">0%</span>
                         </div>
-                        <div class="stat-line">
-                            <span class="stat-label">COMPLETION BONUS:</span>
-                            <span id="finalCompletionBonus">0%</span>
-                        </div>
-                        <div class="stat-line" style="font-size: 1.2em; border-top: 1px solid var(--monitor-green); margin-top: 10px; padding-top: 10px;">
-                            <span class="stat-label">FINAL SCORE:</span>
+                        <div class="stat-line" style="border-top: 1px solid var(--monitor-green); margin-top: 10px; padding-top: 10px;">
+                            <span class="stat-label" style="font-weight: bold;">FINAL SCORE:</span>
                             <span id="finalTotalScore" style="color: var(--warning-yellow); text-shadow: 0 0 10px var(--warning-yellow);">0%</span>
                         </div>
                     </div>
+                <!-- CERTIFICATE -->
+                <div class="certificate-screen" id="certificateScreen">
+                    <div class="certificate" id="certificate">
+                        <div class="cert-header">
+                            <div class="cert-logo">🏥</div>
+                            <h1>AMERICAN RED CROSS</h1>
+                            <p class="cert-subtitle">Emergency Response & CPR Certification</p>
+                        </div>
 
-                    <div class="button-group">
-                        <button id="nextScenarioBtn">NEXT SCENARIO</button>
-                        <button id="backToMenuBtn">RETURN TO MENU</button>
+                        <div class="cert-body">
+                            <p class="cert-label">This is to certify that</p>
+                            <h2 class="cert-name" id="certName">STUDENT NAME</h2>
+                            <p class="cert-text">has successfully completed the comprehensive Red Cross First Aid & CPR curriculum with demonstrated proficiency in:</p>
+                            
+                            <ul class="cert-competencies">
+                                <li>✓ Emergency Response (3 Cs)</li>
+                                <li>✓ Patient Assessment (ABCs)</li>
+                                <li>✓ CPR Proficiency (100-120 BPM)</li>
+                                <li>✓ Choking Response (Heimlich Maneuver)</li>
+                                <li>✓ Water Rescue & Drowning Recovery</li>
+                                <li>✓ Shock Recognition & Treatment</li>
+                                <li>✓ Severe Bleeding Management</li>
+                                <li>✓ Fracture Treatment (RICE Protocol)</li>
+                                <li>✓ Burn Care & Treatment</li>
+                                <li>✓ Poison Control Response</li>
+                            </ul>
+
+                            <p class="cert-text">Completed on: <span class="cert-date" id="certDate">May 20, 2026</span></p>
+                            <p class="cert-text">Overall Score: <span class="cert-score" id="certScore">00</span>%</p>
+                        </div>
+
+                        <div class="cert-footer">
+                            <p>Valid Certificate of Completion</p>
+                            <p class="cert-code">ID: <span id="certCode">CERT-2026-00000</span></p>
+                        </div>
+                    </div>
+
+                    <div class="cert-actions">
+                        <button id="downloadCertBtn">⬇️ DOWNLOAD CERTIFICATE</button>
+                        <button id="printCertBtn">🖨️ PRINT TO PDF</button>
+                        <button id="newPlayerBtn">START OVER</button>
+                    </div>
+
+                    <div class="drive-instructions">
+                        <h3>📁 SAVE TO GOOGLE DRIVE</h3>
+                        <div class="instruction-box">
+                            <p><strong>Step 1:</strong> Click <strong>DOWNLOAD CERTIFICATE</strong> above (saves as PNG image)</p>
+                            <p><strong>Step 2:</strong> Go to <strong>drive.google.com</strong> in a new tab</p>
+                            <p><strong>Step 3:</strong> Click the <strong>+ New</strong> button (left side)</p>
+                            <p><strong>Step 4:</strong> Select <strong>File upload</strong></p>
+                            <p><strong>Step 5:</strong> Find the downloaded certificate image file</p>
+                            <p><strong>Step 6:</strong> Your certificate is now in your Google Drive! 📁✓</p>
+                        </div>
+                        <p style="color: var(--warning-yellow); font-size: 0.85em; margin-top: 15px;">💡 TIP: You can also print this certificate as a PDF and upload the PDF file instead!</p>
                     </div>
                 </div>
             </div>
@@ -762,7 +992,7 @@
     </div>
 
     <div class="keyboard-hint">
-        <span>R</span> = Reference Card | <span>ESC</span> = Menu
+        <span>R</span> = Reference | <span>SPACE</span> = Rhythm | <span>ESC</span> = Menu
     </div>
 
     <div class="debug-console" id="debugConsole"></div>
@@ -771,616 +1001,505 @@
         // ==================== DEBUG ====================
         const debugLog = {
             logs: [],
-            add(message, type = 'info') {
-                const time = new Date().toLocaleTimeString().slice(0, 8);
-                this.logs.push({ message: `[${time}] ${message}`, type });
+            add(msg, type = 'info') {
+                const t = new Date().toLocaleTimeString().slice(0, 8);
+                this.logs.push({ msg: `[${t}] ${msg}`, type });
                 this.render();
-                console.log(`[${type.toUpperCase()}] ${message}`);
+                console.log(`[${type.toUpperCase()}] ${msg}`);
             },
             render() {
                 const el = document.getElementById('debugConsole');
-                el.innerHTML = this.logs.slice(-12)
-                    .map(l => `<div class="debug-entry ${l.type}">${l.message}</div>`)
-                    .join('');
+                el.innerHTML = this.logs.slice(-10).map(l => `<div class="debug-entry ${l.type}">${l.msg}</div>`).join('');
             }
         };
 
-        debugLog.add('System initialized', 'info');
+        debugLog.add('System init', 'info');
 
         // ==================== FIREBASE ====================
         const FIREBASE_PROJECT = 'minigolf-fd9ea';
         const FIREBASE_DB_URL = `https://${FIREBASE_PROJECT}-default-rtdb.firebaseio.com`;
-        const FIREBASE_PATH = '/cpr_curriculum_scores';
+        const FIREBASE_PATH = '/cpr_extended_scores';
         let firebaseWorking = false;
         let useLocalFallback = false;
 
         async function testFirebaseConnection() {
             const status = document.getElementById('firebaseStatus');
             status.textContent = 'FIREBASE: TESTING...';
-            debugLog.add('Testing Firebase...', 'info');
+            debugLog.add('Firebase test...', 'info');
 
             try {
                 const testKey = `test_${Date.now()}`;
                 const writeResp = await fetch(`${FIREBASE_DB_URL}${FIREBASE_PATH}/${testKey}.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ test: true, time: new Date().toISOString() })
+                    body: JSON.stringify({ test: true })
                 });
 
-                if (!writeResp.ok) throw new Error(`Write failed: ${writeResp.status}`);
+                if (!writeResp.ok) throw new Error(`Write: ${writeResp.status}`);
 
                 const readResp = await fetch(`${FIREBASE_DB_URL}${FIREBASE_PATH}/${testKey}.json`);
-                if (!readResp.ok) throw new Error(`Read failed: ${readResp.status}`);
+                if (!readResp.ok) throw new Error(`Read: ${readResp.status}`);
 
                 await fetch(`${FIREBASE_DB_URL}${FIREBASE_PATH}/${testKey}.json`, { method: 'DELETE' });
 
                 firebaseWorking = true;
                 status.textContent = '✓ FIREBASE: READY';
-                debugLog.add('Firebase operational', 'info');
+                debugLog.add('Firebase OK', 'info');
             } catch (err) {
-                debugLog.add(`Firebase failed: ${err.message}`, 'error');
+                debugLog.add(`Firebase fail: ${err.message}`, 'error');
                 status.className = 'firebase-status error';
                 status.textContent = '✗ FALLBACK MODE';
                 useLocalFallback = true;
             }
         }
 
-        // ==================== SCENARIOS ====================
+        // ==================== SCENARIOS (EXPANDED) ====================
         const scenarios = [
             {
                 id: 0,
-                name: '3 Cs',
-                description: 'Check, Call, Care - Foundational emergency response',
+                name: '3 Cs - Emergency Response',
+                description: 'Check, Call, Care Foundation',
                 quiz: [
-                    {
-                        question: 'What is the first "C" in emergency response?',
-                        options: ['Check scene for safety', 'Call 911', 'Care for victim'],
-                        correct: 0
-                    },
-                    {
-                        question: 'When should you call 911?',
-                        options: ['Only if unconscious', 'Immediately if there\'s danger/injury', 'After you check vitals'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What does "Care" mean in the 3 Cs?',
-                        options: ['Give medical advice', 'Provide first aid & CPR', 'Move the person to safety'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What should you check for in the scene?',
-                        options: ['Weather conditions', 'Hazards & safety', 'Time of day'],
-                        correct: 1
-                    },
-                    {
-                        question: 'If the scene is unsafe, what do you do?',
-                        options: ['Still help the victim', 'Call 911 from a safe location', 'Leave immediately'],
-                        correct: 1
-                    }
+                    { question: 'What is the FIRST "C" in emergency response?', options: ['Check scene', 'Call 911', 'Care for victim'], correct: 0 },
+                    { question: 'What hazards should you check for?', options: ['Weather only', 'Electrical, fire, traffic', 'Just the victim'], correct: 1 },
+                    { question: 'When should you call 911?', options: ['After first aid', 'Immediately for serious injuries', 'Only if bleeding'], correct: 1 },
+                    { question: 'What does "Care" involve?', options: ['Give medical advice', 'Provide first aid & CPR', 'Move victim to hospital'], correct: 1 },
+                    { question: 'If scene is unsafe, you should?', options: ['Still help', 'Call 911 from safe location', 'Leave'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'CHECK the scene for dangers', type: 'action', timing: 3 },
-                    { text: 'CALL 911 immediately', type: 'typing', expected: 'call 911', timing: 2 },
-                    { text: 'Identify the injury type', type: 'action', timing: 2 },
-                    { text: 'Provide appropriate CARE', type: 'action', timing: 3 },
-                    { text: 'Monitor victim until help arrives', type: 'action', timing: 2 }
+                    { type: 'action', text: 'SURVEY THE SCENE - Look for dangers', duration: 3 },
+                    { type: 'image', text: 'Select the HAZARD in this scene:', images: ['⚡', '🔥', '✅'], correct: 0 },
+                    { type: 'typing', text: 'Type: What hazards did you identify?', expected: 'electrical|fire|electrical fire|hazard' },
+                    { type: 'action', text: 'Ensure victim is on firm surface', duration: 2 },
+                    { type: 'action', text: 'CHECK for responsiveness - Tap shoulders & shout', duration: 3 },
+                    { type: 'typing', text: 'Type what you would shout:', expected: 'are you okay|hello|wake up' },
+                    { type: 'action', text: 'CALL 911 - Provide location & injury details', duration: 2 },
+                    { type: 'image', text: 'Choose the correct first aid action:', images: ['🩹', '💊', '🏥'], correct: 0 },
+                    { type: 'typing', text: 'Type emergency number:', expected: '911' },
+                    { type: 'action', text: 'Position victim for CARE - on back, airway clear', duration: 3 },
+                    { type: 'action', text: 'Monitor breathing and consciousness', duration: 3 },
+                    { type: 'typing', text: 'Type the 3 Cs in order:', expected: 'check call care|check,call,care' },
+                    { type: 'action', text: 'Keep victim calm and reassured', duration: 2 },
+                    { type: 'action', text: 'Await emergency responders', duration: 2 }
                 ],
-                reference: `
-3 C EMERGENCY RESPONSE
+                reference: `3 C EMERGENCY RESPONSE
 ---
-<span class="ref-key">CHECK:</span> Look for scene hazards
-- Electrical hazards
-- Traffic danger
-- Fire/chemicals
+<span class="ref-key">CHECK:</span> Scene hazards
+- Electrical
+- Fire
+- Traffic
 - Other threats
 
-<span class="ref-key">CALL:</span> Phone 911 immediately
+<span class="ref-key">CALL:</span> 911 NOW
 - Stay calm
-- Describe injuries
 - Give location
-- Follow dispatcher instructions
+- Describe injury
 
-<span class="ref-key">CARE:</span> Provide first aid
-- Stay with victim
-- Keep them calm
-- Apply treatments
-- Monitor vitals
-                `
+<span class="ref-key">CARE:</span> First aid
+- Stay present
+- Keep calm
+- Monitor vitals`
             },
             {
                 id: 1,
-                name: 'ABCs',
-                description: 'Airway, Breathing, Circulation assessment',
+                name: 'ABCs Assessment',
+                description: 'Airway, Breathing, Circulation',
                 quiz: [
-                    {
-                        question: 'What does "A" stand for in ABCs?',
-                        options: ['Alert', 'Airway', 'Artery'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How do you open an airway?',
-                        options: ['Neck compression', 'Head tilt, chin lift', 'Slap the person'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What does "B" represent?',
-                        options: ['Blood pressure', 'Breathing', 'Blinking'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How long should you check for breathing?',
-                        options: ['3 seconds', '5-10 seconds', 'No more than 5 seconds'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What does "C" stand for?',
-                        options: ['Circulation (pulse)', 'Consciousness', 'Comfort'],
-                        correct: 0
-                    }
+                    { question: 'ABC stands for?', options: ['Alert, Breathing, Care', 'Airway, Breathing, Circulation', 'Assess, Bandage, CPR'], correct: 1 },
+                    { question: 'How to open airway?', options: ['Neck compression', 'Head tilt, chin lift', 'Slap the face'], correct: 1 },
+                    { question: 'Check breathing for how long?', options: ['3 sec', '5-10 sec', '30 sec'], correct: 1 },
+                    { question: 'Where check pulse?', options: ['Wrist only', 'Neck (carotid)', 'Foot'], correct: 1 },
+                    { question: 'Signs of circulation?', options: ['Pulse, skin color, warmth', 'Only pulse', 'Breathing only'], correct: 0 }
                 ],
                 steps: [
-                    { text: 'Check RESPONSIVENESS', type: 'action', timing: 2 },
-                    { text: 'Tilt head, lift chin to open AIRWAY', type: 'action', timing: 2 },
-                    { text: 'TYPE the step: "airway"', type: 'typing', expected: 'airway', timing: 2 },
-                    { text: 'Look, listen, FEEL for BREATHING (5-10 sec)', type: 'action', timing: 4 },
-                    { text: 'Check pulse for CIRCULATION', type: 'action', timing: 3 },
-                    { text: 'TYPE: "breathing"', type: 'typing', expected: 'breathing', timing: 2 },
-                    { text: 'TYPE: "circulation"', type: 'typing', expected: 'circulation', timing: 2 }
+                    { type: 'action', text: 'Check RESPONSIVENESS - Are they awake?', duration: 2 },
+                    { type: 'action', text: 'Tilt head back, lift chin to open AIRWAY', duration: 2 },
+                    { type: 'image', text: 'Select correct airway position:', images: ['😴', '😵', '😐'], correct: 2 },
+                    { type: 'action', text: 'Remove mouth obstructions - Clear airway', duration: 2 },
+                    { type: 'action', text: 'Position on back on firm surface', duration: 2 },
+                    { type: 'typing', text: 'First step of ABC:', expected: 'airway|a' },
+                    { type: 'action', text: 'Look, listen, FEEL for BREATHING', duration: 5 },
+                    { type: 'action', text: 'Watch chest for rise/fall', duration: 2 },
+                    { type: 'action', text: 'Listen for breath sounds', duration: 2 },
+                    { type: 'action', text: 'Feel air on cheek', duration: 2 },
+                    { type: 'typing', text: 'Breathing check time:', expected: '5-10|5|10|5 to 10' },
+                    { type: 'action', text: 'Check PULSE at neck (carotid)', duration: 3 },
+                    { type: 'image', text: 'Show where to check pulse:', images: ['👂', '👃', '🤝'], correct: 0 },
+                    { type: 'typing', text: 'Where is pulse checked?', expected: 'neck|carotid|throat' },
+                    { type: 'action', text: 'Note skin color - pale or normal?', duration: 2 },
+                    { type: 'action', text: 'Feel skin temperature - warm or cold?', duration: 2 },
+                    { type: 'typing', text: 'Type ABC in order:', expected: 'airway breathing circulation|abc|a b c' },
+                    { type: 'action', text: 'Document findings for responders', duration: 2 }
                 ],
-                reference: `
-ABC ASSESSMENT
+                reference: `ABC ASSESSMENT
 ---
 <span class="ref-key">A = AIRWAY:</span>
 - Head tilt, chin lift
-- Check mouth for obstructions
-- Clear if needed
+- Clear obstructions
 - Position on back
 
 <span class="ref-key">B = BREATHING:</span>
 - Look for chest rise
-- Listen for air
+- Listen for sounds
 - Feel for breath
 - Check 5-10 seconds
 
 <span class="ref-key">C = CIRCULATION:</span>
-- Check pulse (carotid/radial)
-- Look for bleeding
-- Check skin color/temp
-- Signs of shock?
-                `
+- Check carotid pulse
+- Note skin color
+- Check temperature
+- Signs of shock?`
             },
             {
                 id: 2,
-                name: 'CPR',
-                description: 'Full CPR cycle - Chest compressions and rescue breaths',
+                name: 'CPR Mastery',
+                description: 'Full CPR cycle with compressions',
                 quiz: [
-                    {
-                        question: 'What is the correct compression rate?',
-                        options: ['80-100 BPM', '100-120 BPM', '120-140 BPM'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How many compressions per cycle?',
-                        options: ['15', '30', '50'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How many rescue breaths per cycle?',
-                        options: ['1', '2', '3'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Compression depth for adults?',
-                        options: ['1 inch', '1.5 inches', '2-2.4 inches'],
-                        correct: 2
-                    },
-                    {
-                        question: 'When do you stop CPR?',
-                        options: ['After 1 cycle', 'When tired', 'Until help takes over or victim revives'],
-                        correct: 2
-                    }
+                    { question: 'Correct compression rate?', options: ['80-100', '100-120', '140+'], correct: 1 },
+                    { question: 'Compressions per cycle?', options: ['15', '30', '50'], correct: 1 },
+                    { question: 'Rescue breaths per 30?', options: ['1', '2', '3'], correct: 1 },
+                    { question: 'Hand position on chest?', options: ['Upper chest', 'Center, lower half', 'Stomach'], correct: 1 },
+                    { question: 'When stop CPR?', options: ['After 1 min', 'When tired', 'Until help takes over'], correct: 2 }
                 ],
                 steps: [
-                    { text: 'Check responsiveness and call 911', type: 'action', timing: 2 },
-                    { text: 'Position victim on firm surface', type: 'action', timing: 2 },
-                    { text: 'Open airway (head tilt, chin lift)', type: 'action', timing: 2 },
-                    { text: 'Begin 30 CHEST COMPRESSIONS (100-120 BPM)', type: 'compression', timing: 15 },
-                    { text: 'Give 2 RESCUE BREATHS', type: 'action', timing: 5 },
-                    { text: 'Continue CPR cycles', type: 'action', timing: 3 }
+                    { type: 'action', text: 'Ensure unresponsive & call 911', duration: 2 },
+                    { type: 'action', text: 'Position on firm, flat surface', duration: 2 },
+                    { type: 'action', text: 'Bare chest if clothed - remove top layer', duration: 2 },
+                    { type: 'image', text: 'Hand position on chest:', images: ['🫀', '⬅️', '⬆️'], correct: 0 },
+                    { type: 'action', text: 'Place hands: heel on center of chest, other on top', duration: 2 },
+                    { type: 'action', text: 'Arms straight, lean with full body weight', duration: 2 },
+                    { type: 'rhythm', text: 'Begin 30 COMPRESSIONS at 100-120 BPM', target: 30, bpmRange: [100, 120] },
+                    { type: 'action', text: 'Push hard, push fast - depress 2-2.4 inches', duration: 2 },
+                    { type: 'typing', text: 'Compression depth:', expected: '2-2.4|2.4|2' },
+                    { type: 'action', text: 'Allow complete recoil between compressions', duration: 2 },
+                    { type: 'action', text: 'Open airway after 30 compressions', duration: 2 },
+                    { type: 'action', text: 'Give 2 RESCUE BREATHS - seal mouth, 1 sec each', duration: 3 },
+                    { type: 'image', text: 'Rescue breath technique:', images: ['😤', '😑', '😮'], correct: 0 },
+                    { type: 'rhythm', text: 'Perform 2 RESCUE BREATHS', target: 2, rhythmType: 'breaths' },
+                    { type: 'action', text: 'Watch for chest rise with each breath', duration: 2 },
+                    { type: 'typing', text: 'CPR cycle: __ compressions, __ breaths', expected: '30|2|30 2|30,2' },
+                    { type: 'rhythm', text: 'Continue CPR cycle - 30 compressions', target: 30, bpmRange: [100, 120] },
+                    { type: 'action', text: 'Continue until help arrives or victim revives', duration: 2 },
+                    { type: 'action', text: 'Check pulse every 2 minutes', duration: 2 },
+                    { type: 'action', text: 'Do not interrupt CPR unless necessary', duration: 2 }
                 ],
-                reference: `
-CPR PROTOCOL
+                reference: `CPR PROTOCOL
 ---
 <span class="ref-key">COMPRESSIONS:</span>
 - Rate: 100-120 BPM
 - Depth: 2-2.4 inches
-- Hand position: Center chest
-- 30 compressions per cycle
+- Position: Lower sternum
+- Full body weight
+- 30 per cycle
 
-<span class="ref-key">RESCUE BREATHS:</span>
-- 2 breaths per 30 compressions
+<span class="ref-key">BREATHS:</span>
+- 2 per cycle
 - Seal mouth
-- Give 1 second breath
-- Watch for chest rise
+- 1 second each
+- Watch chest rise
 
 <span class="ref-key">CYCLE:</span>
 - 30 compressions
 - 2 breaths
-- Repeat until help arrives
-- Check pulse every 2 min
-                `
+- Repeat
+- Pulse check: 2 min`
             },
             {
                 id: 3,
-                name: 'Choking',
-                description: 'Heimlich maneuver and back blows',
+                name: 'Choking Response',
+                description: 'Heimlich & abdominal thrusts',
                 quiz: [
-                    {
-                        question: 'Ask "Are you choking?" if victim cannot speak. What do you do?',
-                        options: ['Wait and see', 'Perform abdominal thrusts', 'Call 911 only'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Where do you place your fist for Heimlich?',
-                        options: ['Below navel', 'Above navel', 'On the sternum'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Direction of abdominal thrusts?',
-                        options: ['Downward only', 'Quick upward', 'Side to side'],
-                        correct: 1
-                    },
-                    {
-                        question: 'If Heimlich fails, what do you do?',
-                        options: ['Keep trying', 'Alternate with back blows', 'Call 911 and wait'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Continue abdominal thrusts until?',
-                        options: ['1 minute', 'Object expelled or unresponsive', 'Victim passes out'],
-                        correct: 1
-                    }
+                    { question: 'Ask if choking if they cannot?', options: ['Breathe freely', 'Speak/cough', 'Reach for water'], correct: 1 },
+                    { question: 'Heimlich fist placement?', options: ['Below navel', 'Above navel', 'Sternum'], correct: 1 },
+                    { question: 'Thrust direction?', options: ['Downward', 'Upward', 'Sideways'], correct: 1 },
+                    { question: 'If Heimlich fails?', options: ['Stop', 'Alternate with back blows', 'Wait'], correct: 1 },
+                    { question: 'Continue thrusts until?', options: ['1 minute', 'Object expelled', 'They pass out'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'Ask "Are you choking?"', type: 'action', timing: 2 },
-                    { text: 'Stand behind victim', type: 'action', timing: 1 },
-                    { text: 'Place fist above navel', type: 'action', timing: 2 },
-                    { text: 'TYPE: "abdominal thrusts"', type: 'typing', expected: 'abdominal thrusts', timing: 2 },
-                    { text: 'Quick upward thrusts', type: 'action', timing: 3 },
-                    { text: 'If fails, alternate with back blows', type: 'action', timing: 3 },
-                    { text: 'Continue until object expelled', type: 'action', timing: 3 }
+                    { type: 'action', text: 'Recognize choking - cannot speak/cough, struggling', duration: 2 },
+                    { type: 'typing', text: 'Ask: "Are you choking?"', expected: 'yes|choking|can\'t breathe' },
+                    { type: 'action', text: 'Stand BEHIND the victim', duration: 1 },
+                    { type: 'image', text: 'Heimlich position - stand behind:', images: ['👤', '👥', '🤝'], correct: 0 },
+                    { type: 'action', text: 'Wrap arms around waist, locate navel', duration: 2 },
+                    { type: 'action', text: 'Place fist ABOVE navel, below sternum', duration: 2 },
+                    { type: 'action', text: 'Grasp fist with other hand', duration: 1 },
+                    { type: 'typing', text: 'Fist position - above or below navel?', expected: 'above|above navel' },
+                    { type: 'rhythm', text: 'Perform 5 ABDOMINAL THRUSTS - quick upward', target: 5, rhythmType: 'thrusts' },
+                    { type: 'action', text: 'Quick, firm upward thrusts into abdomen', duration: 3 },
+                    { type: 'action', text: 'Repeat if object not expelled', duration: 2 },
+                    { type: 'action', text: 'If still choking, perform 5 BACK BLOWS', duration: 2 },
+                    { type: 'image', text: 'Back blow position:', images: ['🙏', '🤐', '😤'], correct: 0 },
+                    { type: 'action', text: 'Lean victim forward 45 degrees', duration: 1 },
+                    { type: 'action', text: 'Sharp blows between shoulder blades', duration: 2 },
+                    { type: 'typing', text: 'Alternate thrusts and back ____', expected: 'blows|back blows' },
+                    { type: 'action', text: 'Continue alternating until expelled or unconscious', duration: 2 },
+                    { type: 'action', text: 'If unconscious, begin CPR', duration: 2 }
                 ],
-                reference: `
-CHOKING - HEIMLICH
+                reference: `CHOKING - HEIMLICH
 ---
-<span class="ref-key">RECOGNITION:</span>
-- Cannot speak/cough
-- Difficulty breathing
+<span class="ref-key">SIGNS:</span>
+- Cannot speak
+- Difficult breathing
 - Blue lips/face
-- Panic in eyes
+- Panic
 
-<span class="ref-key">PROCEDURE:</span>
-1. Ask "Are you choking?"
-2. Stand behind victim
-3. Fist above navel
-4. Quick UPWARD thrusts
-5. Repeat until expelled
+<span class="ref-key">THRUSTS:</span>
+1. Stand behind
+2. Fist above navel
+3. Quick upward
+4. Repeat until expelled
 
 <span class="ref-key">BACK BLOWS:</span>
-- Lean victim forward
-- 5 sharp blows between shoulder blades
-- Alternate with thrusts
-                `
+- Lean forward
+- 5 sharp blows
+- Between blades
+- Alternate with thrusts`
             },
             {
                 id: 4,
-                name: 'Drowning',
-                description: 'Water rescue and drowning response',
+                name: 'Drowning Rescue',
+                description: 'Water rescue & recovery',
                 quiz: [
-                    {
-                        question: 'First step in water rescue?',
-                        options: ['Jump in', 'Reach or throw, don\'t go', 'Call 911 first'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What should you reach with?',
-                        options: ['Your arm', 'Pole, branch, rope', 'Dive in'],
-                        correct: 1
-                    },
-                    {
-                        question: 'After rescue from water, what do you check?',
-                        options: ['If they\'re wet', 'Responsiveness and breathing', 'Their pulse only'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Position for drowning victim if unresponsive?',
-                        options: ['Face down', 'Recovery position', 'Sitting up'],
-                        correct: 1
-                    },
-                    {
-                        question: 'When should CPR start?',
-                        options: ['If blue', 'If not breathing', 'Only in hospital'],
-                        correct: 1
-                    }
+                    { question: 'First water rescue step?', options: ['Jump in', 'Reach/throw, don\'t go', 'Call 911'], correct: 1 },
+                    { question: 'Reach with?', options: ['Your arm', 'Pole, rope, board', 'Rescue ring'], correct: 1 },
+                    { question: 'After water rescue, check?', options: ['If wet', 'Responsiveness & breathing', 'For pulse'], correct: 1 },
+                    { question: 'Position if unresponsive?', options: ['Face down', 'Recovery position', 'Sitting'], correct: 1 },
+                    { question: 'When start CPR?', options: ['Always', 'If not breathing', 'In hospital'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'CALL 911 immediately', type: 'action', timing: 2 },
-                    { text: 'Do NOT jump in - reach or throw', type: 'action', timing: 2 },
-                    { text: 'TYPE: "reach"', type: 'typing', expected: 'reach', timing: 2 },
-                    { text: 'Use pole, branch, or rescue throw', type: 'action', timing: 2 },
-                    { text: 'Pull victim to shore carefully', type: 'action', timing: 3 },
-                    { text: 'Place on firm surface', type: 'action', timing: 2 },
-                    { text: 'Check responsiveness & breathing', type: 'action', timing: 2 },
-                    { text: 'Start CPR if needed', type: 'action', timing: 3 }
+                    { type: 'action', text: 'Recognize drowning - struggling, gasping', duration: 2 },
+                    { type: 'typing', text: 'First action: CALL or shout for help?', expected: 'call|help|911' },
+                    { type: 'action', text: 'Do NOT jump in - know your limits', duration: 2 },
+                    { type: 'action', text: 'Look for rescue equipment nearby', duration: 2 },
+                    { type: 'image', text: 'Best rescue tool?', images: ['🏊', '🪵', '🧤'], correct: 1 },
+                    { type: 'action', text: 'Extend pole, branch, or rope to victim', duration: 2 },
+                    { type: 'action', text: 'If on dock, throw rescue ring or board', duration: 2 },
+                    { type: 'typing', text: 'DON\'T jump - reach or ____', expected: 'throw|throw and reach' },
+                    { type: 'action', text: 'Carefully pull victim to shore or dock', duration: 3 },
+                    { type: 'action', text: 'Place on firm surface immediately', duration: 1 },
+                    { type: 'action', text: 'Check responsiveness - tap and shout', duration: 2 },
+                    { type: 'action', text: 'Check breathing - look, listen, feel', duration: 3 },
+                    { type: 'action', text: 'Position recovery (if breathing, unconscious)', duration: 2 },
+                    { type: 'image', text: 'Recovery position:', images: ['🛏️', '😴', '🤸'], correct: 1 },
+                    { type: 'action', text: 'Call 911 immediately', duration: 1 },
+                    { type: 'action', text: 'Keep warm - remove wet clothes if possible', duration: 2 },
+                    { type: 'typing', text: 'If not breathing, start ____', expected: 'cpr|c.p.r|compressions' },
+                    { type: 'action', text: 'Monitor for delayed drowning effects', duration: 2 }
                 ],
-                reference: `
-DROWNING RESCUE
+                reference: `DROWNING RESCUE
 ---
 <span class="ref-key">DON'T JUMP IN:</span>
-- Drowning victim may pull you down
+- Drowning person pulls down
 - Know your limits
 - Stay safe
 
 <span class="ref-key">REACH/THROW:</span>
 - Pole or branch
-- Rescue ring or rope
-- Board or flotation device
-- Extended arm if trained
+- Rescue ring
+- Board
+- Extended arm (trained)
 
 <span class="ref-key">RECOVERY:</span>
 1. Check responsiveness
 2. Check breathing
-3. Start CPR if needed
-4. Place in recovery position
-5. Keep warm & monitor
-                `
+3. CPR if needed
+4. Recovery position
+5. Keep warm`
             },
             {
                 id: 5,
-                name: 'Shock',
-                description: 'Shock positioning and monitoring',
+                name: 'Shock Management',
+                description: 'Recognize & treat shock',
                 quiz: [
-                    {
-                        question: 'What is shock?',
-                        options: ['Emotional fear', 'Body unable to deliver oxygen', 'Electrical injury'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Signs of shock include?',
-                        options: ['Warm, dry skin', 'Cool, pale, clammy skin', 'Flushed face'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How should you position shock victim?',
-                        options: ['Sitting up', 'Flat with legs elevated 12"', 'Recovery position'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What should you cover them with?',
-                        options: ['Nothing', 'Blanket to retain heat', 'Ice'],
-                        correct: 1
-                    },
-                    {
-                        question: 'When should they NOT have legs elevated?',
-                        options: ['Never', 'Head/neck/spine injury', 'Always elevate'],
-                        correct: 1
-                    }
+                    { question: 'Shock is?', options: ['Emotional fear', 'Body can\'t deliver oxygen', 'Fainting'], correct: 1 },
+                    { question: 'Shock signs?', options: ['Warm skin', 'Cool, pale, clammy', 'Flushed face'], correct: 1 },
+                    { question: 'Position for shock?', options: ['Sitting up', 'Flat, legs elevated 12"', 'Prone'], correct: 1 },
+                    { question: 'Cover with?', options: ['Nothing', 'Blanket for warmth', 'Ice'], correct: 1 },
+                    { question: 'Legs elevated unless?', options: ['Always elevate', 'Head/neck/spine injury', 'They\'re painful'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'Recognize SHOCK SIGNS', type: 'action', timing: 2 },
-                    { text: 'TYPE signs: "pale clammy cool"', type: 'typing', expected: 'pale clammy cool', timing: 2 },
-                    { text: 'Lay flat on back', type: 'action', timing: 2 },
-                    { text: 'Elevate legs 12 inches (unless head/spine injury)', type: 'action', timing: 2 },
-                    { text: 'Cover with blanket to prevent heat loss', type: 'action', timing: 2 },
-                    { text: 'Monitor breathing and consciousness', type: 'action', timing: 3 },
-                    { text: 'Call 911 if not already done', type: 'action', timing: 2 }
+                    { type: 'action', text: 'Recognize SHOCK - pale, cold, clammy skin', duration: 2 },
+                    { type: 'image', text: 'Shock signs - choose all:', images: ['😊', '😰', '🥶'], correct: 1 },
+                    { type: 'typing', text: 'Shock skin is: cool, pale, or ____', expected: 'clammy|damp|moist' },
+                    { type: 'action', text: 'Lay victim flat on back (unless head/spine injury)', duration: 2 },
+                    { type: 'action', text: 'Elevate legs 12 inches - use pillow/rolled coat', duration: 2 },
+                    { type: 'typing', text: 'Leg elevation height:', expected: '12|12 inches|one foot|1 foot' },
+                    { type: 'action', text: 'Keep them warm - cover with blanket', duration: 2 },
+                    { type: 'image', text: 'Proper recovery position for shock:', images: ['🛏️', '💺', '🧘'], correct: 0 },
+                    { type: 'action', text: 'Do NOT give food or water', duration: 2 },
+                    { type: 'action', text: 'Monitor breathing and pulse regularly', duration: 3 },
+                    { type: 'typing', text: 'Can you give water to shock patient?', expected: 'no|nope' },
+                    { type: 'action', text: 'Keep reassuring and calm', duration: 2 },
+                    { type: 'action', text: 'Call 911 if not already done', duration: 1 },
+                    { type: 'action', text: 'Never move unnecessarily', duration: 2 },
+                    { type: 'action', text: 'Continue monitoring until help arrives', duration: 2 }
                 ],
-                reference: `
-SHOCK MANAGEMENT
+                reference: `SHOCK MANAGEMENT
 ---
 <span class="ref-key">SHOCK SIGNS:</span>
-- Cool, pale, clammy skin
+- Cool, pale, clammy
 - Rapid, weak pulse
 - Nausea/vomiting
 - Confusion/anxiety
-- Weakness
 
 <span class="ref-key">TREATMENT:</span>
-1. Lay flat on back
+1. Lay flat
 2. Legs elevated 12"
-3. (NOT if spine injury)
-4. Keep warm with blanket
+3. Keep warm
+4. No food/water
 5. Monitor vitals
 6. Call 911
 
 <span class="ref-key">DO NOT:</span>
-- Give food/water
 - Move unnecessarily
-- Leave alone
-                `
+- Give fluids
+- Leave alone`
             },
             {
                 id: 6,
                 name: 'Severe Bleeding',
-                description: 'Pressure, bandaging, and tourniquet use',
+                description: 'Pressure, bandaging, tourniquet',
                 quiz: [
-                    {
-                        question: 'First step for severe bleeding?',
-                        options: ['Apply tourniquet', 'Direct pressure', 'Elevate limb'],
-                        correct: 1
-                    },
-                    {
-                        question: 'What material for direct pressure?',
-                        options: ['Paper towel', 'Clean cloth/gauze', 'Bare hand'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How long should you apply pressure?',
-                        options: ['30 seconds', 'Until bleeding stops', 'Continuously'],
-                        correct: 2
-                    },
-                    {
-                        question: 'When do you apply a tourniquet?',
-                        options: ['Always first', 'If limb bleeding won\'t stop', 'Never'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Where do you place tourniquet?',
-                        options: ['Over wound', '2-3" above wound', 'At ankle/wrist'],
-                        correct: 1
-                    }
+                    { question: 'Severe bleeding first step?', options: ['Tourniquet', 'Direct pressure', 'Elevate'], correct: 1 },
+                    { question: 'Pressure material?', options: ['Paper towel', 'Clean cloth/gauze', 'Nothing'], correct: 1 },
+                    { question: 'Apply pressure for?', options: ['30 sec', 'Until stops', 'Continuously'], correct: 2 },
+                    { question: 'Tourniquet placement?', options: ['Over wound', '2-3" above', 'At joint'], correct: 1 },
+                    { question: 'If cloth soaked?', options: ['Remove it', 'Add more cloth', 'Replace it'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'Call 911 for severe bleeding', type: 'action', timing: 2 },
-                    { text: 'Apply DIRECT PRESSURE with clean cloth', type: 'action', timing: 2 },
-                    { text: 'TYPE: "direct pressure"', type: 'typing', expected: 'direct pressure', timing: 2 },
-                    { text: 'Maintain pressure continuously', type: 'action', timing: 3 },
-                    { text: 'If through cloth, don\'t remove - add more', type: 'action', timing: 2 },
-                    { text: 'Elevate limb if possible', type: 'action', timing: 2 },
-                    { text: 'If pressure fails, apply TOURNIQUET 2-3" above', type: 'action', timing: 2 },
-                    { text: 'Tighten until bleeding stops', type: 'action', timing: 2 }
+                    { type: 'action', text: 'Recognize severe bleeding - spurting, heavy flow', duration: 2 },
+                    { type: 'action', text: 'Call 911 for severe bleeding', duration: 1 },
+                    { type: 'action', text: 'Do NOT touch with bare hands - use gloves', duration: 1 },
+                    { type: 'image', text: 'First action for bleeding:', images: ['🩹', '🔨', '💊'], correct: 0 },
+                    { type: 'action', text: 'Apply DIRECT PRESSURE with clean cloth', duration: 2 },
+                    { type: 'typing', text: 'Apply pressure with: clean ____', expected: 'cloth|gauze|bandage|dressing' },
+                    { type: 'action', text: 'Maintain continuous pressure - do not release', duration: 5 },
+                    { type: 'action', text: 'Press firmly to stop blood flow', duration: 2 },
+                    { type: 'action', text: 'If cloth saturates, ADD more - don\'t remove', duration: 2 },
+                    { type: 'typing', text: 'When cloth soaks, do you remove it?', expected: 'no|nope|don\'t|don\'t remove' },
+                    { type: 'action', text: 'Elevate limb above heart if possible', duration: 2 },
+                    { type: 'action', text: 'Keep pressure - may need 5-10 minutes', duration: 3 },
+                    { type: 'image', text: 'Tourniquet position?', images: ['❌', '✅', '?'], correct: 1 },
+                    { type: 'action', text: 'If pressure fails, apply TOURNIQUET 2-3" above wound', duration: 2 },
+                    { type: 'typing', text: 'Tourniquet distance above wound:', expected: '2-3|2 to 3|2-3 inches' },
+                    { type: 'action', text: 'Tighten tourniquet until bleeding completely stops', duration: 2 },
+                    { type: 'action', text: 'NOTE TIME tourniquet applied', duration: 1 },
+                    { type: 'action', text: 'Do NOT loosen or remove - mark with time', duration: 2 }
                 ],
-                reference: `
-SEVERE BLEEDING
+                reference: `SEVERE BLEEDING
 ---
 <span class="ref-key">DIRECT PRESSURE:</span>
-- Use clean cloth/gauze
-- Apply firmly
+- Use clean cloth
+- Press firmly
 - Don't remove cloth
 - Add more if needed
-- Maintain continuously
+- Maintain pressure
 
 <span class="ref-key">TOURNIQUET:</span>
-- Apply 2-3" above wound
+- Apply 2-3" above
 - Between wound & body
-- Tighten until bleeding stops
-- Note time applied
+- Tighten until stops
+- Note time
 - Don't loosen
 
 <span class="ref-key">ELEVATION:</span>
-- Raise above heart if possible
-- Maintains pressure
+- Raise above heart
 - Reduces bleeding
-                `
+- Keep elevated`
             },
             {
                 id: 7,
-                name: 'Fractures',
-                description: 'RICE protocol and immobilization',
+                name: 'Fracture Treatment',
+                description: 'RICE protocol & immobilization',
                 quiz: [
-                    {
-                        question: 'What does RICE stand for?',
-                        options: ['Rest, Ice, Cold, Elevation', 'Rest, Ice, Compression, Elevation', 'Run, Ice, Care, Evaluate'],
-                        correct: 1
-                    },
-                    {
-                        question: 'First step for fracture?',
-                        options: ['Move it back', 'Rest & immobilize', 'Get X-ray'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How long apply ice?',
-                        options: ['5 minutes', '10-15 minutes', '30+ minutes'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Compression means?',
-                        options: ['Squeezing hard', 'Elastic wrap', 'Ice only'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Why elevate fracture?',
-                        options: ['Looks better', 'Reduces swelling', 'Helps healing'],
-                        correct: 1
-                    }
+                    { question: 'RICE stands for?', options: ['Rest, Ice, Care, Eval', 'Rest, Ice, Compression, Elevation', 'Raise, Ice, Check, Exam'], correct: 1 },
+                    { question: 'First fracture action?', options: ['Move it', 'Rest & immobilize', 'Massage'], correct: 1 },
+                    { question: 'Apply ice for?', options: ['5 min', '10-15 min', '30+ min'], correct: 1 },
+                    { question: 'Compression means?', options: ['Squeezing hard', 'Elastic wrap', 'Ice'], correct: 1 },
+                    { question: 'Why elevate?', options: ['Looks better', 'Reduces swelling', 'Easier', 'Reduces swelling'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'Assess for fracture signs', type: 'action', timing: 2 },
-                    { text: 'STOP activity immediately', type: 'action', timing: 1 },
-                    { text: 'TYPE: "RICE"', type: 'typing', expected: 'rice', timing: 2 },
-                    { text: 'REST - Don\'t move limb', type: 'action', timing: 2 },
-                    { text: 'ICE - Apply cold for 10-15 min', type: 'action', timing: 3 },
-                    { text: 'COMPRESSION - Wrap with elastic bandage', type: 'action', timing: 2 },
-                    { text: 'ELEVATION - Raise above heart', type: 'action', timing: 2 },
-                    { text: 'Call 911 or seek medical care', type: 'action', timing: 2 }
+                    { type: 'action', text: 'Suspect fracture - pain, swelling, deformity', duration: 2 },
+                    { type: 'typing', text: 'Type: R.I.C.E.', expected: 'rice|r.i.c.e|rest ice compression elevation' },
+                    { type: 'action', text: 'REST - Stop activity immediately', duration: 1 },
+                    { type: 'action', text: 'Do not move the injured limb', duration: 2 },
+                    { type: 'action', text: 'Immobilize with sling or splint', duration: 2 },
+                    { type: 'image', text: 'Immobilization option?', images: ['🏃', '🤳', '🪓'], correct: 1 },
+                    { type: 'action', text: 'ICE - Apply cold for 10-15 minutes', duration: 3 },
+                    { type: 'typing', text: 'Ice time: 10-____ minutes', expected: '15|10|15 minutes' },
+                    { type: 'action', text: 'Never apply ice directly to skin - use cloth', duration: 1 },
+                    { type: 'action', text: 'COMPRESSION - Wrap with elastic bandage', duration: 2 },
+                    { type: 'action', text: 'Wrap snugly but not too tight', duration: 2 },
+                    { type: 'typing', text: 'Compression: wrap with elastic ____', expected: 'bandage|wrap|band|tape' },
+                    { type: 'action', text: 'Check circulation - fingers/toes should be warm', duration: 2 },
+                    { type: 'action', text: 'ELEVATION - Raise above heart level', duration: 2 },
+                    { type: 'action', text: 'Use pillow to keep elevated', duration: 2 },
+                    { type: 'image', text: 'Proper elevation position:', images: ['📍', '🛏️', '💺'], correct: 1 },
+                    { type: 'action', text: 'Maintain elevation for days - reduces swelling', duration: 2 },
+                    { type: 'typing', text: 'Why elevate? Reduces ____', expected: 'swelling|edema|puffiness' },
+                    { type: 'action', text: 'Seek medical care for X-ray & treatment', duration: 2 }
                 ],
-                reference: `
-FRACTURE - RICE PROTOCOL
+                reference: `FRACTURE - RICE PROTOCOL
 ---
 <span class="ref-key">REST:</span>
 - Stop activity
-- Don't move limb
-- Splint if needed
-- Sling for arm
+- Don't move
+- Immobilize
 
 <span class="ref-key">ICE:</span>
 - 10-15 minutes
-- Never direct to skin
 - Wrap in cloth
 - Reduces swelling
 
 <span class="ref-key">COMPRESSION:</span>
 - Elastic bandage
-- Not too tight
-- Should feel snug
+- Snug, not tight
 - Check circulation
 
 <span class="ref-key">ELEVATION:</span>
-- Above heart level
-- Reduces swelling
-- Use pillow/sling
-- Maintain for days
-                `
+- Above heart
+- Use pillow
+- Reduces swelling`
             },
             {
                 id: 8,
-                name: 'Burns',
-                description: 'Cooling and covering burns',
+                name: 'Burn Treatment',
+                description: 'Cooling & covering burns',
                 quiz: [
-                    {
-                        question: 'First step for burn?',
-                        options: ['Apply ointment', 'Cool with water', 'Wrap tightly'],
-                        correct: 1
-                    },
-                    {
-                        question: 'How long cool a burn?',
-                        options: ['1 minute', '5 minutes', '10-20 minutes or until pain relief'],
-                        correct: 2
-                    },
-                    {
-                        question: 'What to remove from burn?',
-                        options: ['Skin', 'Clothing (unless stuck)', 'Bandages'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Cover burn with?',
-                        options: ['Plastic wrap', 'Clean cloth', 'Nothing'],
-                        correct: 1
-                    },
-                    {
-                        question: 'When call 911 for burn?',
-                        options: ['All burns', 'Severe/large/face', 'Never needed'],
-                        correct: 1
-                    }
+                    { question: 'Burn first step?', options: ['Ointment', 'Cool with water', 'Ice'], correct: 1 },
+                    { question: 'Cool for how long?', options: ['1 min', '5 min', '10-20 min'], correct: 2 },
+                    { question: 'Remove from burn?', options: ['Skin', 'Clothing (if not stuck)', 'Bandages'], correct: 1 },
+                    { question: 'Cover with?', options: ['Plastic wrap', 'Clean cloth', 'Nothing'], correct: 1 },
+                    { question: 'When call 911?', options: ['Small burns', 'Large/severe/face', 'Never'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'STOP - Remove from heat source', type: 'action', timing: 2 },
-                    { text: 'Cool with WATER for 10-20 minutes', type: 'action', timing: 3 },
-                    { text: 'TYPE: "cool"', type: 'typing', expected: 'cool', timing: 2 },
-                    { text: 'Remove tight clothing (if not stuck)', type: 'action', timing: 2 },
-                    { text: 'Do NOT remove stuck clothing', type: 'action', timing: 1 },
-                    { text: 'Cover with clean, dry cloth', type: 'action', timing: 2 },
-                    { text: 'Elevate if limb', type: 'action', timing: 1 },
-                    { text: 'Call 911 if severe', type: 'action', timing: 2 }
+                    { type: 'action', text: 'STOP - Remove from heat source immediately', duration: 2 },
+                    { type: 'action', text: 'Smother flames if necessary with blanket', duration: 2 },
+                    { type: 'image', text: 'Remove heat source - best action?', images: ['🔥', '💨', '❌'], correct: 2 },
+                    { type: 'action', text: 'COOL with water for 10-20 minutes', duration: 4 },
+                    { type: 'typing', text: 'Cool water time: 10-____ minutes', expected: '20|15|20 minutes|10 to 20' },
+                    { type: 'action', text: 'Use room temperature water - not ice', duration: 2 },
+                    { type: 'action', text: 'Cool until pain relief or time expires', duration: 3 },
+                    { type: 'action', text: 'Remove tight clothing (if not stuck to skin)', duration: 2 },
+                    { type: 'typing', text: 'Remove clothing only if:', expected: 'not stuck|if not stuck|stuck' },
+                    { type: 'action', text: 'Remove jewelry - may trap heat', duration: 1 },
+                    { type: 'action', text: 'Do NOT remove clothing stuck to burn', duration: 1 },
+                    { type: 'action', text: 'COVER with clean, dry cloth', duration: 2 },
+                    { type: 'image', text: 'Cover burn with?', images: ['🧻', '🧢', '🧤'], correct: 0 },
+                    { type: 'action', text: 'Use sterile dressing if available', duration: 1 },
+                    { type: 'action', text: 'Loose covering - don\'t wrap tightly', duration: 2 },
+                    { type: 'action', text: 'Prevents infection and heat loss', duration: 2 },
+                    { type: 'action', text: 'Elevate burned limb if possible', duration: 2 },
+                    { type: 'typing', text: 'When call 911 for burns?', expected: 'large|severe|face|hands|feet|third|deep' },
+                    { type: 'action', text: 'Call 911 for burns > 3", face, hands, feet, deep', duration: 2 }
                 ],
-                reference: `
-BURN TREATMENT
+                reference: `BURN TREATMENT
 ---
 <span class="ref-key">COOL:</span>
-- Water for 10-20 min
+- Water 10-20 min
+- Room temp
 - Until pain relief
-- Room temp water OK
-- Don't use ice directly
+- Don't use ice
 
 <span class="ref-key">REMOVE:</span>
 - Tight clothing
@@ -1389,87 +1508,76 @@ BURN TREATMENT
 - Leave stuck items
 
 <span class="ref-key">COVER:</span>
-- Clean, dry cloth
+- Clean cloth
 - Sterile if available
-- Loose covering
+- Loose cover
 - Prevents infection
 
 <span class="ref-key">WHEN 911:</span>
-- Burns larger than 3"
-- Face, hands, feet
-- Deep/severe burns
-- Child burns
-                `
+- Burns > 3"
+- Face/hands/feet
+- Deep/charred
+- Child burns`
             },
             {
                 id: 9,
-                name: 'Poisoning',
-                description: 'Poison control and monitoring',
+                name: 'Poisoning Response',
+                description: 'Poison Control & monitoring',
                 quiz: [
-                    {
-                        question: 'First step for poisoning?',
-                        options: ['Give water', 'Call Poison Control', 'Vomit it up'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Poison Control number?',
-                        options: ['411', '911', '1-800-222-1222'],
-                        correct: 2
-                    },
-                    {
-                        question: 'What info do you give?',
-                        options: ['Your name', 'Substance, amount, time, victim age', 'Just the poison name'],
-                        correct: 1
-                    },
-                    {
-                        question: 'Should you induce vomiting?',
-                        options: ['Always', 'Only if conscious', 'NOT recommended'],
-                        correct: 2
-                    },
-                    {
-                        question: 'Position unconscious poisoning victim?',
-                        options: ['On back', 'Recovery position', 'On stomach'],
-                        correct: 1
-                    }
+                    { question: 'Poisoning first action?', options: ['Vomit', 'Call Poison Control', 'Water'], correct: 1 },
+                    { question: 'Poison Control number?', options: ['411', '911', '1-800-222-1222'], correct: 2 },
+                    { question: 'Tell them?', options: ['Your name', 'Substance, amount, time, age', 'Just poison'], correct: 1 },
+                    { question: 'Induce vomiting?', options: ['Always', 'If conscious', 'NOT recommended'], correct: 2 },
+                    { question: 'Unconscious position?', options: ['On back', 'Recovery position', 'On stomach'], correct: 1 }
                 ],
                 steps: [
-                    { text: 'CALL Poison Control: 1-800-222-1222', type: 'action', timing: 2 },
-                    { text: 'TYPE: "poison control"', type: 'typing', expected: 'poison control', timing: 2 },
-                    { text: 'Identify substance if possible', type: 'action', timing: 2 },
-                    { text: 'Note amount & time of exposure', type: 'action', timing: 2 },
-                    { text: 'Follow Poison Control instructions', type: 'action', timing: 2 },
-                    { text: 'Monitor breathing & consciousness', type: 'action', timing: 2 },
-                    { text: 'Place in recovery position if unresponsive', type: 'action', timing: 2 },
-                    { text: 'Call 911 if symptoms worsen', type: 'action', timing: 2 }
+                    { type: 'action', text: 'Recognize poisoning - unusual symptoms, empty container', duration: 2 },
+                    { type: 'typing', text: 'Call Poison Control: ____-____-____', expected: '1800222122|1-800-222-1222|800-222-1222' },
+                    { type: 'action', text: 'CALL Poison Control 1-800-222-1222 - available 24/7', duration: 2 },
+                    { type: 'image', text: 'After poison exposure, call:', images: ['911', '411', '1800...'], correct: 2 },
+                    { type: 'action', text: 'Identify substance - read label if available', duration: 2 },
+                    { type: 'typing', text: 'Information needed: substance, amount, time, ____', expected: 'age|weight|patient age|victim age' },
+                    { type: 'action', text: 'Note amount ingested or exposed', duration: 2 },
+                    { type: 'action', text: 'Note time of exposure', duration: 1 },
+                    { type: 'action', text: 'Note victim\'s age and weight if known', duration: 1 },
+                    { type: 'action', text: 'Follow Poison Control instructions exactly', duration: 2 },
+                    { type: 'action', text: 'Do NOT induce vomiting - not recommended', duration: 2 },
+                    { type: 'typing', text: 'Should you make them vomit?', expected: 'no|nope|don\'t|not recommended' },
+                    { type: 'action', text: 'Do NOT give activated charcoal (unless instructed)', duration: 2 },
+                    { type: 'action', text: 'Do NOT give food or water unless instructed', duration: 2 },
+                    { type: 'action', text: 'Monitor breathing and consciousness', duration: 3 },
+                    { type: 'action', text: 'Place in recovery position if unconscious', duration: 2 },
+                    { type: 'image', text: 'Unconscious poison victim position:', images: ['😴', '💺', '🤸'], correct: 0 },
+                    { type: 'action', text: 'Loosen tight clothing', duration: 1 },
+                    { type: 'action', text: 'Keep container/substance info for responders', duration: 2 },
+                    { type: 'action', text: 'Call 911 if symptoms worsen', duration: 2 }
                 ],
-                reference: `
-POISONING RESPONSE
+                reference: `POISONING RESPONSE
 ---
 <span class="ref-key">CALL IMMEDIATELY:</span>
 - Poison Control
 - 1-800-222-1222
-- 24/7 availability
+- 24/7 available
 - Free & confidential
 
 <span class="ref-key">TELL THEM:</span>
 - What was taken
-- Amount
+- Amount ingested
 - Time of exposure
 - Victim age/weight
 - Symptoms
 
 <span class="ref-key">DO NOT:</span>
-- Induce vomiting
+- Induce vomit
 - Give food/water
+- Give charcoal
 - (unless instructed)
-- Panic
 
 <span class="ref-key">MONITOR:</span>
 - Breathing
 - Consciousness
 - Symptoms
-- Follow instructions
-                `
+- Follow instructions`
             }
         ];
 
@@ -1479,12 +1587,13 @@ POISONING RESPONSE
             period: '1st/Red',
             currentScenarioId: 0,
             scenarioStatus: Array(10).fill('locked'),
-            quizAnswers: [],
             quizScore: 0,
             scenarioAccuracy: 0,
             startTime: 0,
             stepIndex: 0,
-            gameActive: true
+            gameActive: true,
+            rhythmTaps: 0,
+            rhythmTargetTaps: 0
         };
 
         gameState.scenarioStatus[0] = 'unlocked';
@@ -1492,14 +1601,17 @@ POISONING RESPONSE
         // ==================== UTILITIES ====================
         function calculateTypingAccuracy(input, expected) {
             const inputLower = input.toLowerCase().trim();
-            const expectedLower = expected.toLowerCase().trim();
             
-            // Check if input contains expected as substring
-            if (inputLower.includes(expectedLower)) {
-                return 100;
-            }
+            // Handle pipe-separated alternatives
+            const alternatives = expected.split('|').map(e => e.toLowerCase().trim());
             
-            // Levenshtein distance for fuzzy matching
+            // Check if input exactly matches any alternative
+            if (alternatives.some(alt => inputLower === alt)) return 100;
+            
+            // Check if input contains any alternative as substring
+            if (alternatives.some(alt => inputLower.includes(alt) || alt.includes(inputLower))) return 100;
+            
+            // Levenshtein distance against best matching alternative
             const levenshtein = (a, b) => {
                 const matrix = [];
                 for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -1521,20 +1633,24 @@ POISONING RESPONSE
                 return matrix[b.length][a.length];
             };
             
-            const distance = levenshtein(inputLower, expectedLower);
-            const maxLength = Math.max(inputLower.length, expectedLower.length);
-            const accuracy = Math.max(0, 100 - (distance / maxLength) * 100);
+            // Find best match among alternatives
+            let bestAccuracy = 0;
+            alternatives.forEach(alt => {
+                const distance = levenshtein(inputLower, alt);
+                const maxLength = Math.max(inputLower.length, alt.length);
+                const accuracy = Math.max(0, 100 - (distance / maxLength) * 100);
+                bestAccuracy = Math.max(bestAccuracy, accuracy);
+            });
             
-            return Math.round(accuracy);
+            return Math.round(bestAccuracy);
         }
 
         function updateProgressBar() {
             const completed = gameState.scenarioStatus.filter(s => s === 'completed').length;
             const progress = (completed / 10) * 100;
             const bar = document.getElementById('progressBar');
-            const text = document.getElementById('progressText');
             bar.style.width = progress + '%';
-            text.textContent = Math.round(progress) + '%';
+            bar.textContent = Math.round(progress) + '%';
         }
 
         function showMenu() {
@@ -1551,9 +1667,9 @@ POISONING RESPONSE
             grid.innerHTML = scenarios.map(s => `
                 <div class="scenario-card ${gameState.scenarioStatus[s.id]} ${gameState.scenarioStatus[s.id] === 'locked' ? 'locked' : ''}"
                      onclick="startScenario(${s.id})" style="cursor: ${gameState.scenarioStatus[s.id] === 'locked' ? 'not-allowed' : 'pointer'}">
-                    <div class="scenario-number">SCENARIO ${s.id + 1}</div>
-                    <div class="scenario-name">${s.name}</div>
-                    <div class="scenario-status">${gameState.scenarioStatus[s.id] === 'locked' ? '🔒 LOCKED' : gameState.scenarioStatus[s.id] === 'unlocked' ? '🔓 READY' : '✓ PASSED'}</div>
+                    <div class="scenario-number">S${s.id + 1}</div>
+                    <div class="scenario-name">${s.name.split(' - ')[0]}</div>
+                    <div class="scenario-status">${gameState.scenarioStatus[s.id] === 'locked' ? '🔒' : gameState.scenarioStatus[s.id] === 'completed' ? '✓' : '🔓'}</div>
                 </div>
             `).join('');
         }
@@ -1567,11 +1683,10 @@ POISONING RESPONSE
             
             gameState.currentScenarioId = id;
             currentQuestionIndex = 0;
-            gameState.quizAnswers = [];
             gameState.quizScore = 0;
             selectedAnswer = null;
             
-            debugLog.add(`Starting scenario ${id}: ${scenarios[id].name}`, 'info');
+            debugLog.add(`Scenario ${id}: ${scenarios[id].name}`, 'info');
             startQuiz();
         }
 
@@ -1594,7 +1709,6 @@ POISONING RESPONSE
                 <button class="answer-btn" onclick="selectAnswer(${i})">${opt}</button>
             `).join('');
             
-            document.getElementById('quizResult').style.display = 'none';
             selectedAnswer = null;
         }
 
@@ -1612,34 +1726,26 @@ POISONING RESPONSE
             const question = scenario.quiz[currentQuestionIndex];
             const isCorrect = selectedAnswer === question.correct;
             
-            gameState.quizAnswers.push({ question: question.question, userAnswer: selectedAnswer, correct: isCorrect });
             if (isCorrect) gameState.quizScore += (100 / scenario.quiz.length);
             
-            debugLog.add(`Q${currentQuestionIndex + 1}: ${isCorrect ? 'CORRECT' : 'INCORRECT'}`, isCorrect ? 'info' : 'warning');
+            debugLog.add(`Q${currentQuestionIndex + 1}: ${isCorrect ? '✓' : '✗'}`, isCorrect ? 'info' : 'warning');
             
-            // Show result
-            const resultEl = document.getElementById('quizResult');
-            resultEl.style.display = 'block';
-            document.getElementById('resultScore').textContent = isCorrect ? '✓ CORRECT' : '✗ INCORRECT';
-            document.getElementById('resultMessage').textContent = isCorrect ? 'Good knowledge!' : 'Review this concept.';
-            
-            // Lock answer buttons
             document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('.answer-btn')[selectedAnswer].classList.add(isCorrect ? 'correct' : 'incorrect');
             
             currentQuestionIndex++;
             
-            if (currentQuestionIndex >= scenarios[gameState.currentScenarioId].quiz.length) {
+            if (currentQuestionIndex >= scenario.quiz.length) {
                 setTimeout(() => {
                     if (gameState.quizScore >= 70) {
                         startGameplay();
                     } else {
-                        alert(`Quiz failed! Score: ${Math.round(gameState.quizScore)}%\nMust score 70%+ to proceed.`);
+                        alert(`Quiz Score: ${Math.round(gameState.quizScore)}%\nMust score 70%+ to proceed.`);
                         showMenu();
                     }
-                }, 1500);
+                }, 1200);
             } else {
-                setTimeout(showQuizQuestion, 1500);
+                setTimeout(showQuizQuestion, 1200);
             }
         }
 
@@ -1656,20 +1762,14 @@ POISONING RESPONSE
             const scenario = scenarios[gameState.currentScenarioId];
             document.getElementById('scenarioTitle').textContent = scenario.name.toUpperCase();
             
-            // Show reference card
             updateReferenceCard();
-            
-            debugLog.add(`Gameplay started: ${scenario.name}`, 'info');
             showGameplayStep();
         }
 
         function updateReferenceCard() {
             const scenario = scenarios[gameState.currentScenarioId];
             const card = document.getElementById('referenceCard');
-            card.innerHTML = `
-                <div class="ref-title">${scenario.name} REFERENCE</div>
-                ${scenario.reference}
-            `;
+            card.innerHTML = `<div class="ref-title">${scenario.name}</div>${scenario.reference}`;
         }
 
         function showGameplayStep() {
@@ -1678,45 +1778,136 @@ POISONING RESPONSE
             const scenario = scenarios[gameState.currentScenarioId];
             const step = scenario.steps[gameState.stepIndex];
             
-            document.getElementById('stepDisplay').textContent = `STEP ${gameState.stepIndex + 1} / ${scenario.steps.length}`;
+            document.getElementById('stepInfo').textContent = `STEP ${gameState.stepIndex + 1} / ${scenario.steps.length}`;
             document.getElementById('prompt').textContent = step.text;
             
             const buttonGroup = document.getElementById('buttonGroup');
+            const rhythmGame = document.getElementById('rhythmGame');
+            const imageChallenge = document.getElementById('imageChallenge');
             const typingTest = document.getElementById('typingTest');
+            
             buttonGroup.innerHTML = '';
+            rhythmGame.classList.remove('active');
+            imageChallenge.classList.remove('active');
             typingTest.classList.remove('active');
             
-            if (step.type === 'typing') {
-                typingTest.classList.add('active');
-                document.getElementById('typingInput').value = '';
-                document.getElementById('typingInput').focus();
-                
-                // Add submit button to typing test
-                let submitBtn = document.getElementById('typingSubmitBtn');
-                if (!submitBtn) {
-                    submitBtn = document.createElement('button');
-                    submitBtn.id = 'typingSubmitBtn';
-                    submitBtn.className = 'submit-typing-btn';
-                    submitBtn.textContent = 'SUBMIT (ENTER)';
-                    typingTest.appendChild(submitBtn);
-                }
-                submitBtn.onclick = () => submitTypingTest(step.expected);
-                
-                document.getElementById('typingInput').onkeypress = (e) => {
-                    if (e.key === 'Enter') submitTypingTest(step.expected);
-                };
-            } else if (step.type === 'compression') {
-                // Simplified compression (just click to continue after timed delay)
-                buttonGroup.innerHTML = `<button onclick="completeCompressions()">COMPRESSIONS COMPLETE</button>`;
-                setTimeout(() => {
-                    gameState.scenarioAccuracy += 15;
-                    nextStep();
-                }, step.timing * 1000);
-            } else {
-                // Action step
-                buttonGroup.innerHTML = `<button onclick="continueStep()">▶ CONTINUE</button>`;
-                gameState.scenarioAccuracy += 15;
+            switch(step.type) {
+                case 'rhythm':
+                    rhythmGame.classList.add('active');
+                    gameState.rhythmTargetTaps = step.target;
+                    gameState.rhythmTaps = 0;
+                    document.getElementById('rhythmCounter').textContent = '0 / ' + step.target;
+                    document.getElementById('rhythmHint').textContent = step.rhythmType === 'breaths' ? 'Click for each BREATH' : step.rhythmType === 'thrusts' ? 'Click for each THRUST' : 'Click/SPACE for each compression';
+                    startRhythmGame(step);
+                    break;
+                    
+                case 'image':
+                    imageChallenge.classList.add('active');
+                    document.getElementById('imageLabel').textContent = step.text;
+                    const imageGrid = document.getElementById('imageGrid');
+                    imageGrid.innerHTML = step.images.map((img, i) => `
+                        <div class="image-option" onclick="selectImage(${i})">${img}</div>
+                    `).join('');
+                    break;
+                    
+                case 'typing':
+                    typingTest.classList.add('active');
+                    document.getElementById('typingInput').value = '';
+                    document.getElementById('typingInput').focus();
+                    document.getElementById('typingInput').onkeypress = (e) => {
+                        if (e.key === 'Enter') submitTypingTest(step.expected);
+                    };
+                    let submitBtn = document.getElementById('typingSubmitBtn');
+                    if (!submitBtn) {
+                        submitBtn = document.createElement('button');
+                        submitBtn.id = 'typingSubmitBtn';
+                        submitBtn.className = 'submit-typing-btn';
+                        submitBtn.textContent = 'SUBMIT';
+                        typingTest.appendChild(submitBtn);
+                    }
+                    submitBtn.onclick = () => submitTypingTest(step.expected);
+                    break;
+                    
+                default: // action
+                    buttonGroup.innerHTML = `<button onclick="continueStep()">▶ CONTINUE</button>`;
+                    gameState.scenarioAccuracy += 8;
+                    break;
             }
+        }
+
+        function startRhythmGame(step) {
+            let lastTapTime = Date.now();
+            let bpms = [];
+            let spaceHandler = null;
+            
+            document.getElementById('rhythmBtn').onclick = () => {
+                const now = Date.now();
+                const interval = now - lastTapTime;
+                lastTapTime = now;
+                
+                if (gameState.rhythmTaps > 0) {
+                    const bpm = Math.round(60000 / interval);
+                    if (bpm > 50 && bpm < 200) { // Filter out unrealistic BPMs
+                        bpms.push(bpm);
+                        document.getElementById('bpmDisplay').textContent = `BPM: ${bpm}`;
+                    }
+                }
+                
+                gameState.rhythmTaps++;
+                document.getElementById('rhythmCounter').textContent = gameState.rhythmTaps + ' / ' + gameState.rhythmTargetTaps;
+                
+                if (gameState.rhythmTaps >= gameState.rhythmTargetTaps) {
+                    let accuracy = 100;
+                    
+                    if (bpms.length > 0) {
+                        const avgBpm = Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length);
+                        
+                        if (step.bpmRange) {
+                            const [min, max] = step.bpmRange;
+                            if (avgBpm < min || avgBpm > max) {
+                                accuracy = Math.max(50, 100 - Math.abs(avgBpm - (min + max) / 2) * 2);
+                            }
+                        }
+                        
+                        debugLog.add(`Rhythm: ${gameState.rhythmTaps} taps @ avg ${avgBpm} BPM`, 'info');
+                    } else {
+                        accuracy = 100; // Single tap, just reward completion
+                        debugLog.add(`Rhythm: ${gameState.rhythmTaps} single taps`, 'info');
+                    }
+                    
+                    gameState.scenarioAccuracy += accuracy * 0.1;
+                    
+                    // Remove event listener before moving on
+                    if (spaceHandler) document.removeEventListener('keydown', spaceHandler);
+                    nextStep();
+                }
+            };
+            
+            // Create unique handler for this rhythm game
+            spaceHandler = (e) => {
+                if (e.code === 'Space' && document.getElementById('rhythmGame').classList.contains('active')) {
+                    e.preventDefault();
+                    document.getElementById('rhythmBtn').click();
+                }
+            };
+            
+            document.addEventListener('keydown', spaceHandler);
+        }
+
+        function selectImage(index) {
+            const scenario = scenarios[gameState.currentScenarioId];
+            const step = scenario.steps[gameState.stepIndex];
+            const isCorrect = index === step.correct;
+            
+            document.querySelectorAll('.image-option').forEach((img, i) => {
+                img.classList.add(i === index ? (isCorrect ? 'correct' : 'incorrect') : '');
+                img.onclick = null;
+            });
+            
+            gameState.scenarioAccuracy += isCorrect ? 12 : 6;
+            debugLog.add(`Image: ${isCorrect ? 'correct' : 'wrong'}`, isCorrect ? 'info' : 'warning');
+            
+            setTimeout(nextStep, 1000);
         }
 
         function submitTypingTest(expected) {
@@ -1724,9 +1915,9 @@ POISONING RESPONSE
             const accuracy = calculateTypingAccuracy(input, expected);
             
             document.getElementById('typingAccuracy').textContent = `Accuracy: ${accuracy}%`;
-            gameState.scenarioAccuracy += accuracy * 0.15;
+            gameState.scenarioAccuracy += accuracy * 0.12;
             
-            debugLog.add(`Typing test: "${input}" (${accuracy}% match)`, accuracy >= 70 ? 'info' : 'warning');
+            debugLog.add(`Typing: "${input}" (${accuracy}%)`, accuracy >= 70 ? 'info' : 'warning');
             
             if (accuracy >= 70) {
                 setTimeout(nextStep, 800);
@@ -1735,16 +1926,13 @@ POISONING RESPONSE
                 setTimeout(() => {
                     document.getElementById('typingInput').style.borderColor = 'var(--monitor-green)';
                     document.getElementById('typingInput').value = '';
+                    document.getElementById('typingAccuracy').textContent = '';
                     document.getElementById('typingInput').focus();
                 }, 1000);
             }
         }
 
         function continueStep() {
-            nextStep();
-        }
-
-        function completeCompressions() {
             nextStep();
         }
 
@@ -1764,15 +1952,13 @@ POISONING RESPONSE
             gameState.scenarioAccuracy = Math.min(100, gameState.scenarioAccuracy);
             
             const elapsed = (Date.now() - gameState.startTime) / 1000;
-            const speedBonus = Math.max(0, 100 - (elapsed / 60) * 10);
-            const completionBonus = 10;
+            const speedBonus = Math.max(0, Math.min(100, (300 - elapsed) / 3));
             
-            const totalScore = (gameState.quizScore * 0.4) + (gameState.scenarioAccuracy * 0.35) + (speedBonus * 0.15) + (completionBonus * 0.1);
+            const totalScore = (gameState.quizScore * 0.4) + (gameState.scenarioAccuracy * 0.5) + (speedBonus * 0.1);
             
             document.getElementById('finalQuizScore').textContent = Math.round(gameState.quizScore) + '%';
             document.getElementById('finalScenarioAccuracy').textContent = Math.round(gameState.scenarioAccuracy) + '%';
             document.getElementById('finalSpeedBonus').textContent = Math.round(speedBonus) + '%';
-            document.getElementById('finalCompletionBonus').textContent = completionBonus + '%';
             document.getElementById('finalTotalScore').textContent = Math.round(totalScore) + '%';
             
             gameState.scenarioStatus[gameState.currentScenarioId] = 'completed';
@@ -1782,11 +1968,200 @@ POISONING RESPONSE
             }
             
             saveScoreToFirebase(totalScore);
+            saveProgressLocally();
             
-            debugLog.add(`Scenario complete - Score: ${Math.round(totalScore)}%`, 'info');
+            debugLog.add(`Complete: ${Math.round(totalScore)}%`, 'info');
+            
+            // Check if all scenarios complete
+            const allComplete = gameState.scenarioStatus.every(s => s === 'completed');
+            
+            if (allComplete) {
+                showCertificate();
+            } else {
+                document.getElementById('gameplay').classList.remove('active');
+                document.getElementById('gameOver').classList.add('active');
+            }
+        }
+
+        function showCertificate() {
+            // Calculate overall average score
+            let totalScores = [];
+            for (let i = 0; i < 10; i++) {
+                gameState.currentScenarioId = i;
+                const scenario = scenarios[i];
+                const quizScore = gameState.quizScore || 80;
+                const scenarioScore = gameState.scenarioAccuracy || 80;
+                const avgScore = (quizScore * 0.4) + (scenarioScore * 0.5) + (10 * 0.1);
+                totalScores.push(avgScore);
+            }
+            
+            const overallScore = Math.round(totalScores.reduce((a, b) => a + b, 0) / totalScores.length);
+            
+            // Populate certificate
+            document.getElementById('certName').textContent = gameState.playerName.toUpperCase();
+            document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('certScore').textContent = overallScore;
+            document.getElementById('certCode').textContent = `CERT-${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+            
+            // Store overall score
+            gameState.overallScore = overallScore;
             
             document.getElementById('gameplay').classList.remove('active');
-            document.getElementById('gameOver').classList.add('active');
+            document.getElementById('gameOver').classList.remove('active');
+            document.getElementById('certificateScreen').classList.add('active');
+            
+            debugLog.add(`Certificate generated: ${gameState.playerName} - ${overallScore}%`, 'info');
+        }
+
+        // LOCAL SAVE/LOAD
+        function saveProgressLocally() {
+            const progressData = {
+                playerName: gameState.playerName,
+                period: gameState.period,
+                scenarioStatus: gameState.scenarioStatus,
+                overallScore: gameState.overallScore || 0,
+                timestamp: new Date().toISOString(),
+                completedScenarios: gameState.scenarioStatus.filter(s => s === 'completed').length
+            };
+            
+            localStorage.setItem('cprProgress', JSON.stringify(progressData));
+            debugLog.add('Progress saved to localStorage', 'info');
+        }
+
+        function loadProgressLocally() {
+            const saved = localStorage.getItem('cprProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState.playerName = data.playerName;
+                gameState.period = data.period;
+                gameState.scenarioStatus = data.scenarioStatus;
+                gameState.overallScore = data.overallScore;
+                debugLog.add(`Loaded progress: ${data.completedScenarios}/10 scenarios`, 'info');
+                return true;
+            }
+            return false;
+        }
+
+        function clearProgressLocally() {
+            localStorage.removeItem('cprProgress');
+            debugLog.add('Progress cleared', 'info');
+        }
+
+        // CERTIFICATE DOWNLOAD
+        function downloadCertificate() {
+            const certElement = document.getElementById('certificate');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions
+            canvas.width = 1200;
+            canvas.height = 800;
+            
+            // Draw certificate as image
+            ctx.fillStyle = '#f5f5dc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Border
+            ctx.strokeStyle = '#8b0000';
+            ctx.lineWidth = 15;
+            ctx.strokeRect(7, 7, canvas.width - 14, canvas.height - 14);
+            
+            // Header
+            ctx.fillStyle = '#8b0000';
+            ctx.font = 'bold 60px Georgia, serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('AMERICAN RED CROSS', canvas.width / 2, 80);
+            
+            // Subtitle
+            ctx.fillStyle = '#666';
+            ctx.font = '30px Georgia, serif';
+            ctx.fillText('Emergency Response & CPR Certification', canvas.width / 2, 130);
+            
+            // Body text
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '24px Georgia, serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('This is to certify that', canvas.width / 2, 200);
+            
+            // Student name
+            ctx.fillStyle = '#8b0000';
+            ctx.font = 'bold 48px Georgia, serif';
+            ctx.fillText(gameState.playerName.toUpperCase(), canvas.width / 2, 280);
+            
+            // Text
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '18px Georgia, serif';
+            ctx.textAlign = 'center';
+            const text = 'has successfully completed the comprehensive Red Cross';
+            const text2 = 'First Aid & CPR curriculum with demonstrated proficiency';
+            ctx.fillText(text, canvas.width / 2, 330);
+            ctx.fillText(text2, canvas.width / 2, 360);
+            
+            // Date and score
+            ctx.font = '20px Georgia, serif';
+            ctx.fillStyle = '#8b0000';
+            ctx.fillText(`Completed: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, canvas.width / 2, 450);
+            ctx.fillText(`Overall Score: ${gameState.overallScore}%`, canvas.width / 2, 490);
+            
+            // Certificate code
+            ctx.fillStyle = '#666';
+            ctx.font = '14px Courier New, monospace';
+            ctx.fillText(`ID: ${document.getElementById('certCode').textContent}`, canvas.width / 2, 700);
+            ctx.fillText('Valid Certificate of Completion', canvas.width / 2, 740);
+            
+            // Download
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `CPR_Certificate_${gameState.playerName.replace(/\s/g, '_')}_${new Date().getFullYear()}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                debugLog.add(`Certificate downloaded: ${link.download}`, 'info');
+            });
+        }
+
+        function printCertificate() {
+            const certElement = document.getElementById('certificate');
+            const printWindow = window.open('', '', 'width=900,height=700');
+            
+            const html = `
+                <html>
+                <head>
+                    <title>CPR Certificate - ${gameState.playerName}</title>
+                    <style>
+                        body { margin: 20px; font-family: Georgia, serif; }
+                        .certificate {
+                            background: linear-gradient(135deg, #f5f5dc 0%, #fffacd 50%, #f5f5dc 100%);
+                            border: 8px solid #8b0000;
+                            padding: 40px;
+                            text-align: center;
+                            color: #1a1a1a;
+                        }
+                        h1 { color: #8b0000; font-size: 2em; margin: 0; }
+                        .name { color: #8b0000; font-size: 2em; font-weight: bold; margin: 20px 0; }
+                        .score { color: #8b0000; font-weight: bold; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    ${certElement.innerHTML}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(html);
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+                debugLog.add('Print dialog opened', 'info');
+            }, 250);
         }
 
         // ==================== FIREBASE ====================
@@ -1803,9 +2178,9 @@ POISONING RESPONSE
             };
             
             if (useLocalFallback) {
-                const scores = JSON.parse(localStorage.getItem('cprCurriculumScores') || '[]');
+                const scores = JSON.parse(localStorage.getItem('cprExtendedScores') || '[]');
                 scores.push(data);
-                localStorage.setItem('cprCurriculumScores', JSON.stringify(scores));
+                localStorage.setItem('cprExtendedScores', JSON.stringify(scores));
                 debugLog.add('Score saved to localStorage', 'info');
                 return;
             }
@@ -1818,34 +2193,42 @@ POISONING RESPONSE
                 });
                 
                 if (resp.ok) {
-                    debugLog.add('Score uploaded to Firebase', 'info');
+                    debugLog.add('Score to Firebase', 'info');
                 } else {
-                    throw new Error(`Firebase write failed: ${resp.status}`);
+                    throw new Error(`${resp.status}`);
                 }
             } catch (err) {
-                debugLog.add(`Firebase save error, using localStorage: ${err.message}`, 'warning');
-                const scores = JSON.parse(localStorage.getItem('cprCurriculumScores') || '[]');
+                debugLog.add(`Firebase error, using localStorage`, 'warning');
+                const scores = JSON.parse(localStorage.getItem('cprExtendedScores') || '[]');
                 scores.push(data);
-                localStorage.setItem('cprCurriculumScores', JSON.stringify(scores));
+                localStorage.setItem('cprExtendedScores', JSON.stringify(scores));
             }
         }
 
         // ==================== BUTTON HANDLERS ====================
-        document.getElementById('quizSubmitBtn').addEventListener('click', submitQuizAnswer);
+        const quizSubmitBtn = document.getElementById('quizSubmitBtn');
+        const quizBackBtn = document.getElementById('quizBackBtn');
+        const nextScenarioBtn = document.getElementById('nextScenarioBtn');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
         
-        document.getElementById('quizBackBtn').addEventListener('click', () => {
-            showMenu();
-        });
+        if (quizSubmitBtn) quizSubmitBtn.addEventListener('click', submitQuizAnswer);
+        if (quizBackBtn) quizBackBtn.addEventListener('click', () => showMenu());
+        if (nextScenarioBtn) nextScenarioBtn.addEventListener('click', () => showMenu());
+        if (backToMenuBtn) backToMenuBtn.addEventListener('click', () => showMenu());
         
-        document.getElementById('nextScenarioBtn').addEventListener('click', () => {
-            showMenu();
-        });
+        // Certificate buttons - check if they exist
+        const downloadBtn = document.getElementById('downloadCertBtn');
+        const printBtn = document.getElementById('printCertBtn');
+        const newPlayerBtn = document.getElementById('newPlayerBtn');
         
-        document.getElementById('backToMenuBtn').addEventListener('click', () => {
-            showMenu();
+        if (downloadBtn) downloadBtn.addEventListener('click', downloadCertificate);
+        if (printBtn) printBtn.addEventListener('click', printCertificate);
+        if (newPlayerBtn) newPlayerBtn.addEventListener('click', () => {
+            clearProgressLocally();
+            location.reload();
         });
 
-        // ==================== KEYBOARD SHORTCUTS ====================
+        // ==================== KEYBOARD ====================
         document.addEventListener('keydown', (e) => {
             if (e.key === 'r' || e.key === 'R') {
                 document.getElementById('referenceCard').classList.toggle('open');
@@ -1862,6 +2245,26 @@ POISONING RESPONSE
         async function init() {
             await testFirebaseConnection();
             
+            // Check for saved progress
+            const hasSavedProgress = localStorage.getItem('cprProgress') !== null;
+            let resumeChoice = 'new';
+            
+            if (hasSavedProgress) {
+                const savedData = JSON.parse(localStorage.getItem('cprProgress'));
+                resumeChoice = prompt(
+                    `Found saved progress for "${savedData.playerName}" (${savedData.completedScenarios}/10 scenarios complete)\n\nEnter "resume" to continue or "new" for a new game:`,
+                    'resume'
+                );
+            }
+            
+            if (resumeChoice === 'resume' && hasSavedProgress) {
+                loadProgressLocally();
+                debugLog.add(`Resumed: ${gameState.playerName}`, 'info');
+                showMenu();
+                return;
+            }
+            
+            // New game
             const name = prompt('Enter your name:') || 'Anonymous';
             const periodChoices = ['1st/Red', '2nd/Green', '5th/Yellow', '6th/Blue'];
             const period = prompt('Select period (1st/Red, 2nd/Green, 5th/Yellow, 6th/Blue):', '1st/Red');
@@ -1869,7 +2272,7 @@ POISONING RESPONSE
             gameState.playerName = name;
             gameState.period = periodChoices.includes(period) ? period : '1st/Red';
             
-            debugLog.add(`Player: ${gameState.playerName}, Period: ${gameState.period}`, 'info');
+            debugLog.add(`New player: ${gameState.playerName}, Period: ${gameState.period}`, 'info');
             showMenu();
         }
 
