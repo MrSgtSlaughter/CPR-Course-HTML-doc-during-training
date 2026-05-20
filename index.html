@@ -216,6 +216,17 @@
             color: var(--warning-yellow);
         }
 
+        .badge {
+            display: inline-block;
+            font-size: 1.2em;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
         .progress-section {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--pulse-blue);
@@ -1068,13 +1079,13 @@
                 ],
                 steps: [
                     { type: 'action', text: 'SURVEY THE SCENE - Look for dangers', duration: 3 },
-                    { type: 'image', text: 'Select the HAZARD in this scene:', images: ['⚡', '🔥', '✅'], correct: 0 },
+                    { type: 'image', text: 'Which shows a HAZARD?', images: ['⚡ Electrical hazard', '🔥 Fire hazard', '✅ Safe zone'], correct: 1 },
                     { type: 'typing', text: 'Type: What hazards did you identify?', expected: 'electrical|fire|electrical fire|hazard' },
                     { type: 'action', text: 'Ensure victim is on firm surface', duration: 2 },
                     { type: 'action', text: 'CHECK for responsiveness - Tap shoulders & shout', duration: 3 },
                     { type: 'typing', text: 'Type what you would shout:', expected: 'are you okay|hello|wake up' },
                     { type: 'action', text: 'CALL 911 - Provide location & injury details', duration: 2 },
-                    { type: 'image', text: 'Choose the correct first aid action:', images: ['🩹', '💊', '🏥'], correct: 0 },
+                    { type: 'image', text: 'Correct first aid action:', images: ['🩹 Apply bandage', '💊 Give medication', '🏥 Call emergency'], correct: 2 },
                     { type: 'typing', text: 'Type emergency number:', expected: '911' },
                     { type: 'action', text: 'Position victim for CARE - on back, airway clear', duration: 3 },
                     { type: 'action', text: 'Monitor breathing and consciousness', duration: 3 },
@@ -1114,7 +1125,7 @@
                 steps: [
                     { type: 'action', text: 'Check RESPONSIVENESS - Are they awake?', duration: 2 },
                     { type: 'action', text: 'Tilt head back, lift chin to open AIRWAY', duration: 2 },
-                    { type: 'image', text: 'Select correct airway position:', images: ['😴', '😵', '😐'], correct: 2 },
+                    { type: 'image', text: 'Correct airway opening position:', images: ['😴 Chin down', '😵 Head tilted back', '😐 Neutral position'], correct: 1 },
                     { type: 'action', text: 'Remove mouth obstructions - Clear airway', duration: 2 },
                     { type: 'action', text: 'Position on back on firm surface', duration: 2 },
                     { type: 'typing', text: 'First step of ABC:', expected: 'airway|a' },
@@ -1124,7 +1135,7 @@
                     { type: 'action', text: 'Feel air on cheek', duration: 2 },
                     { type: 'typing', text: 'Breathing check time:', expected: '5-10|5|10|5 to 10' },
                     { type: 'action', text: 'Check PULSE at neck (carotid)', duration: 3 },
-                    { type: 'image', text: 'Show where to check pulse:', images: ['👂', '👃', '🤝'], correct: 0 },
+                    { type: 'image', text: 'Where to check carotid pulse:', images: ['👂 Ear', '👃 Nose', '🤝 Neck (carotid)'], correct: 2 },
                     { type: 'typing', text: 'Where is pulse checked?', expected: 'neck|carotid|throat' },
                     { type: 'action', text: 'Note skin color - pale or normal?', duration: 2 },
                     { type: 'action', text: 'Feel skin temperature - warm or cold?', duration: 2 },
@@ -1165,7 +1176,7 @@
                     { type: 'action', text: 'Ensure unresponsive & call 911', duration: 2 },
                     { type: 'action', text: 'Position on firm, flat surface', duration: 2 },
                     { type: 'action', text: 'Bare chest if clothed - remove top layer', duration: 2 },
-                    { type: 'image', text: 'Hand position on chest:', images: ['🫀', '⬅️', '⬆️'], correct: 0 },
+                    { type: 'image', text: 'CPR hand position on chest:', images: ['🫀 Center of chest', '⬅️ Left side', '⬆️ Upper sternum'], correct: 0 },
                     { type: 'action', text: 'Place hands: heel on center of chest, other on top', duration: 2 },
                     { type: 'action', text: 'Arms straight, lean with full body weight', duration: 2 },
                     { type: 'rhythm', text: 'Begin 30 COMPRESSIONS at 100-120 BPM', target: 30, bpmRange: [100, 120] },
@@ -1587,6 +1598,7 @@
             period: '1st/Red',
             currentScenarioId: 0,
             scenarioStatus: Array(10).fill('locked'),
+            scenarioScores: Array(10).fill(0), // ADD THIS LINE - track scores
             quizScore: 0,
             scenarioAccuracy: 0,
             startTime: 0,
@@ -1662,6 +1674,13 @@
             updateProgressBar();
         }
 
+        function getBadge(score) {
+            if (score >= 90) return '⭐⭐⭐';
+            if (score >= 80) return '⭐⭐';
+            if (score >= 70) return '⭐';
+            return '✓';
+        }
+
         function renderScenarioGrid() {
             const grid = document.getElementById('scenarioGrid');
             grid.innerHTML = scenarios.map(s => `
@@ -1669,7 +1688,9 @@
                      onclick="startScenario(${s.id})" style="cursor: ${gameState.scenarioStatus[s.id] === 'locked' ? 'not-allowed' : 'pointer'}">
                     <div class="scenario-number">S${s.id + 1}</div>
                     <div class="scenario-name">${s.name.split(' - ')[0]}</div>
-                    <div class="scenario-status">${gameState.scenarioStatus[s.id] === 'locked' ? '🔒' : gameState.scenarioStatus[s.id] === 'completed' ? '✓' : '🔓'}</div>
+                    <div class="scenario-status">
+                        ${gameState.scenarioStatus[s.id] === 'locked' ? '🔒 LOCKED' : gameState.scenarioStatus[s.id] === 'completed' ? `<span class="badge">${getBadge(gameState.scenarioScores[s.id])}</span>` : '🔓 READY'}
+                    </div>
                 </div>
             `).join('');
         }
@@ -1899,15 +1920,21 @@
             const step = scenario.steps[gameState.stepIndex];
             const isCorrect = index === step.correct;
             
+            debugLog.add(`Image clicked: option ${index}, correct: ${step.correct}`, 'info');
+            
             document.querySelectorAll('.image-option').forEach((img, i) => {
                 img.classList.add(i === index ? (isCorrect ? 'correct' : 'incorrect') : '');
-                img.onclick = null;
+                img.style.pointerEvents = 'none'; // Disable further clicks
             });
             
             gameState.scenarioAccuracy += isCorrect ? 12 : 6;
-            debugLog.add(`Image: ${isCorrect ? 'correct' : 'wrong'}`, isCorrect ? 'info' : 'warning');
+            debugLog.add(`Image: ${isCorrect ? 'correct (+12)' : 'wrong (+6)'} - Accuracy now: ${Math.round(gameState.scenarioAccuracy)}%`, isCorrect ? 'info' : 'warning');
             
-            setTimeout(nextStep, 1000);
+            // Ensure nextStep is called after delay
+            setTimeout(() => {
+                debugLog.add('Image step advancing...', 'info');
+                nextStep();
+            }, 1000);
         }
 
         function submitTypingTest(expected) {
@@ -1962,6 +1989,7 @@
             document.getElementById('finalTotalScore').textContent = Math.round(totalScore) + '%';
             
             gameState.scenarioStatus[gameState.currentScenarioId] = 'completed';
+            gameState.scenarioScores[gameState.currentScenarioId] = Math.round(totalScore);
             
             if (gameState.currentScenarioId < 9) {
                 gameState.scenarioStatus[gameState.currentScenarioId + 1] = 'unlocked';
